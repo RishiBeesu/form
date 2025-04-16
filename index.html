@@ -852,10 +852,11 @@
         // Flag to prevent multiple animations
         window.animating = false;
         // API Key (in a real implementation, this should be secured on the server side)
+        let API_KEY;
         fetch('/api/get-key')
         .then(res => res.json())
         .then(data => {
-        const API_KEY = data.key;
+        API_KEY = data.key;
         // Use apiKey for your API calls here
       });
         let questions = []; // Will be populated from the JSON file
