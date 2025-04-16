@@ -1,0 +1,466 @@
+[
+    {
+        "category": "Loan Avashyaktayen",
+        "questions": [
+            {
+                "id": "loan_product_type",
+                "text": "Aap kis prakar ka loan lena chahte hain?",
+                "type": "multiple_choice",
+                "options": [
+                    "Personal Loan",
+                    "Property ke khilaf Loan",
+                    "Home Loan",
+                    "Business Loan",
+                    "Gold Loan"
+                ],
+                "required": true
+            },
+            {
+                "id": "loan_amount",
+                "text": "Aapko kitna loan chahiye?",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 4
+                },
+                "required": true
+            },
+            {
+                "id": "comfortable_emi",
+                "text": "Aap har mahine kitni EMI de sakte hain?",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 3
+                },
+                "required": true
+            },
+            {
+                "id": "loan_urgency",
+                "text": "Aapko yeh loan kitni jaldi chahiye?",
+                "type": "multiple_choice",
+                "options": [
+                    "Turant",
+                    "1 week ke andar",
+                    "15 din ke andar",
+                    "1 month ke andar",
+                    "2-3 months ke andar"
+                ],
+                "required": true
+            }
+        ]
+    },
+    {
+        "category": "Customer Details",
+        "questions": [
+            {
+                "id": "customer_name",
+                "text": "Aapka pura naam kya hai?",
+                "type": "text",
+                "validation": {
+                    "minLength": 3
+                },
+                "required": true
+            },
+            {
+                "id": "business_ownership",
+                "text": "Kya aap business ke malik hain ya yeh parivar ke kisi member ka hai aur aap ise manage karte hain?",
+                "type": "multiple_choice",
+                "options": [
+                    "Main malik hoon",
+                    "Parivar ke member ke naam par hai, main manage karta hoon",
+                    "Main malik nahi hoon"
+                ],
+                "required": true
+            },
+            {
+                "id": "business_owner_details",
+                "text": "Agar aap malik nahi hain, to business malik ka naam aur aapka unse rishta kya hai?",
+                "type": "text",
+                "required": false,
+                "conditionalNavigation": {
+                    "Main malik hoon": {
+                        "goToQuestion": "customer_address"
+                    }
+                }
+            },
+            {
+                "id": "customer_address",
+                "text": "Aap kahan rehte hain? Vistar se pata batayein",
+                "type": "text",
+                "validation": {
+                    "minLength": 10
+                },
+                "required": true
+            },
+            {
+                "id": "house_ownership",
+                "text": "Kya aap jis ghar mein reh rahe hain woh aapka khud ka hai?",
+                "type": "multiple_choice",
+                "options": [
+                    "Haan, mera khud ka hai",
+                    "Nahi, kiraye ka hai",
+                    "Parivar ke kisi member ka hai"
+                ],
+                "required": true
+            },
+            {
+                "id": "stay_duration",
+                "text": "Aap kitne time se isi jagah par reh rahe hain?",
+                "type": "multiple_choice",
+                "options": [
+                    "1 saal se kam",
+                    "1-3 saal",
+                    "3-5 saal",
+                    "5-10 saal",
+                    "10 saal se zyada"
+                ],
+                "required": true
+            }
+        ]
+    },
+    {
+        "category": "Business Details",
+        "questions": [
+            {
+                "id": "business_name",
+                "text": "Aapke business ka naam kya hai?",
+                "type": "text",
+                "required": true
+            },
+            {
+                "id": "business_duration",
+                "text": "Aap kitne time se is business mein hain?",
+                "type": "multiple_choice",
+                "options": [
+                    "1 saal se kam",
+                    "1-3 saal",
+                    "3-5 saal",
+                    "5-10 saal",
+                    "10 saal se zyada"
+                ],
+                "required": true
+            },
+            {
+                "id": "business_type",
+                "text": "Agar yeh trading business hai, to kya yeh retail hai ya wholesale?",
+                "type": "dropdown",
+                "options": [
+                    "Retail",
+                    "Wholesale",
+                    "Dono",
+                    "Trading business nahi hai",
+                    "Manufacturing",
+                    "Service"
+                ],
+                "required": true
+            },
+            {
+                "id": "business_location",
+                "text": "Aapka business kahan sthit hai?",
+                "type": "text",
+                "validation": {
+                    "minLength": 10
+                },
+                "required": true
+            },
+            {
+                "id": "employee_count",
+                "text": "Aap kitne employees ko rozgar dete hain?",
+                "type": "multiple_choice",
+                "options": [
+                    "0 (khud hi kaam karta hoon)",
+                    "1-5",
+                    "6-10",
+                    "11-20",
+                    "20 se zyada"
+                ],
+                "required": true
+            },
+            {
+                "id": "business_sector",
+                "text": "Aapka business kis sector mein aata hai?",
+                "type": "dropdown",
+                "options": [
+                    "Retail",
+                    "Manufacturing",
+                    "Services",
+                    "Agriculture",
+                    "Healthcare",
+                    "Education",
+                    "Construction",
+                    "IT",
+                    "Transportation",
+                    "Other"
+                ],
+                "required": true
+            },
+            {
+                "id": "udyam_aadhaar",
+                "text": "Kya aapke paas apne business ke liye Udyam Aadhaar hai?",
+                "type": "multiple_choice",
+                "options": [
+                    "Haan",
+                    "Nahi",
+                    "Application process mein hai"
+                ],
+                "required": true
+            }
+        ]
+    },
+    {
+        "category": "Income Details",
+        "questions": [
+            {
+                "id": "monthly_revenue",
+                "text": "Aapke business ki monthly total income kitni hai?",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 4
+                },
+                "required": true
+            },
+            {
+                "id": "monthly_profit",
+                "text": "Aapke business ka monthly net profit kitna hai?",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 4
+                },
+                "required": true
+            },
+            {
+                "id": "monthly_salary",
+                "text": "Agar aap kahin job bhi karte hain, to aapki monthly salary kitni hai?",
+                "type": "text",
+                "validation": {
+                    "format": "number"
+                },
+                "required": false
+            },
+            {
+                "id": "rental_income",
+                "text": "Kya aapko kisi property se kiraye ki income hoti hai? Agar haan, to monthly kitni?",
+                "type": "text",
+                "validation": {
+                    "format": "number"
+                },
+                "required": false
+            },
+            {
+                "id": "household_expenses",
+                "text": "Aapke ghar ka monthly kharch kitna hai?",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 3
+                },
+                "required": true
+            }
+        ]
+    },
+    {
+        "category": "Property Details",
+        "questions": [
+            {
+                "id": "property_type",
+                "text": "Property ka prakar?",
+                "type": "multiple_choice",
+                "options": [
+                    "Residential",
+                    "Commercial",
+                    "Industrial",
+                    "Mixed use"
+                ],
+                "required": true
+            },
+            {
+                "id": "property_structure",
+                "text": "Property ki structure kaisi hai?",
+                "type": "multiple_choice",
+                "options": [
+                    "Khud ki property (zameen aur building)",
+                    "Building mein unit (flat/shop/office)",
+                    "Khali zameen/plot"
+                ],
+                "required": true
+            },
+            {
+                "id": "occupancy_type",
+                "text": "Property ka upyog kaise ho raha hai?",
+                "type": "multiple_choice",
+                "options": [
+                    "Khud rehte hain",
+                    "Kiraye par di hui hai",
+                    "Mixed",
+                    "Khali hai"
+                ],
+                "required": true
+            },
+            {
+                "id": "roof_type",
+                "text": "Property ki chhat kis prakar ki hai?",
+                "type": "multiple_choice",
+                "options": [
+                    "RCC chhat",
+                    "Tiled chhat",
+                    "Sheet chhat",
+                    "Foos ki chhat"
+                ],
+                "required": true
+            },
+            {
+                "id": "road_width",
+                "text": "Property ke samne ki road kitni chaudi hai?",
+                "type": "dropdown",
+                "options": [
+                    "5 feet se kam",
+                    "5 - 10 feet",
+                    "10 - 20 feet",
+                    "20 - 40 feet",
+                    "40 - 60 feet",
+                    "60 - 80 feet",
+                    "80 - 100 feet",
+                    "100 - 150 feet",
+                    "150 feet se adhik"
+                ],
+                "required": true
+            },
+            {
+                "id": "land_area",
+                "text": "Property ka zameen area kitna hai? (square feet mein)",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 2
+                },
+                "required": true
+            },
+            {
+                "id": "built_up_area",
+                "text": "Property ka built-up area kitna hai? (square feet mein)",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 2
+                },
+                "required": true
+            },
+            {
+                "id": "property_value",
+                "text": "Property ka estimated value kitna hai?",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 5
+                },
+                "required": true
+            },
+            {
+                "id": "property_address",
+                "text": "Property ka detailed address?",
+                "type": "text",
+                "validation": {
+                    "minLength": 10
+                },
+                "required": true
+            },
+            {
+                "id": "existing_loan",
+                "text": "Kya is property par pehle se koi loan hai?",
+                "type": "multiple_choice",
+                "options": [
+                    "Haan",
+                    "Nahi"
+                ],
+                "required": true
+            },
+            {
+                "id": "existing_emi",
+                "text": "Maujuda loan ki EMI kitni hai?",
+                "type": "text",
+                "validation": {
+                    "format": "number"
+                },
+                "required": false,
+                "conditionalNavigation": {
+                    "Nahi": {
+                        "goToQuestion": "property_ownership"
+                    }
+                }
+            },
+            {
+                "id": "property_ownership",
+                "text": "Kya aap property ke malik hain?",
+                "type": "multiple_choice",
+                "options": [
+                    "Haan",
+                    "Nahi"
+                ],
+                "required": true
+            },
+            {
+                "id": "property_owner_name",
+                "text": "Property malik ka pura naam?",
+                "type": "text",
+                "required": false,
+                "conditionalNavigation": {
+                    "Haan": {
+                        "goToQuestion": "survey_number"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "category": "Property Verification",
+        "questions": [
+            {
+                "id": "survey_number",
+                "text": "Property ka survey number / khasra number?",
+                "type": "text",
+                "required": false
+            },
+            {
+                "id": "property_document",
+                "text": "Kripya property ka koi ek document upload karen (jaise khasra, jamabandi, naksha aadi)",
+                "type": "file",
+                "allowedTypes": ".pdf,.jpg,.jpeg,.png",
+                "maxSizeInMB": 5,
+                "required": true
+            }
+        ]
+    },
+    {
+        "category": "KYC Details",
+        "questions": [
+            {
+                "id": "aadhaar_number",
+                "text": "Apna Aadhaar number darj karen",
+                "type": "text",
+                "validation": {
+                    "pattern": "^[0-9]{12}$"
+                },
+                "required": true
+            },
+            {
+                "id": "aadhaar_otp",
+                "text": "Aapke Aadhaar se jude mobile number par bheje gaye OTP ko darj karen",
+                "type": "otp",
+                "length": 6,
+                "required": true
+            },
+            {
+                "id": "pan_number",
+                "text": "Apna PAN number darj karen",
+                "type": "text",
+                "validation": {
+                    "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]{1}$"
+                },
+                "required": true
+            }
+        ]
+    }
+]

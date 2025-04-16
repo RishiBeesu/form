@@ -1,0 +1,466 @@
+[
+    {
+        "category": "Loan Avashyaktegalu",
+        "questions": [
+            {
+                "id": "loan_product_type",
+                "text": "Nimge yava type na loan beku?",
+                "type": "multiple_choice",
+                "options": [
+                    "Personal Loan",
+                    "Property mele Loan",
+                    "Home Loan",
+                    "Business Loan",
+                    "Gold Loan"
+                ],
+                "required": true
+            },
+            {
+                "id": "loan_amount",
+                "text": "Nimge eshtu loan beku?",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 4
+                },
+                "required": true
+            },
+            {
+                "id": "comfortable_emi",
+                "text": "Neevu tinglage eshtu EMI kattabahudu?",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 3
+                },
+                "required": true
+            },
+            {
+                "id": "loan_urgency",
+                "text": "Nimge ee loan eshtu urgent aagi beku?",
+                "type": "multiple_choice",
+                "options": [
+                    "Takshanave",
+                    "1 vara olage",
+                    "15 dinagala olage",
+                    "1 tingle olage",
+                    "2-3 tinglu olage"
+                ],
+                "required": true
+            }
+        ]
+    },
+    {
+        "category": "Customer Details",
+        "questions": [
+            {
+                "id": "customer_name",
+                "text": "Nimma purthi hesaru enu?",
+                "type": "text",
+                "validation": {
+                    "minLength": 3
+                },
+                "required": true
+            },
+            {
+                "id": "business_ownership",
+                "text": "Neevu business odeyara, athava idu nimma kutumba sadasyara hesarinalli ide mattu neevu neevannu manage maadtidira?",
+                "type": "multiple_choice",
+                "options": [
+                    "Naane odeya",
+                    "Kutumba sadasyana hesarinalli ide, naanu manage maadtidini",
+                    "Naanu odeya alla"
+                ],
+                "required": true
+            },
+            {
+                "id": "business_owner_details",
+                "text": "Neevu odeya aagiddre, business odeyara hesaru mattu avara jothe nimma sambandha enu?",
+                "type": "text",
+                "required": false,
+                "conditionalNavigation": {
+                    "Naane odeya": {
+                        "goToQuestion": "customer_address"
+                    }
+                }
+            },
+            {
+                "id": "customer_address",
+                "text": "Neevu elli vaasisuttiddira? Vivaravagi vilasa kodi",
+                "type": "text",
+                "validation": {
+                    "minLength": 10
+                },
+                "required": true
+            },
+            {
+                "id": "house_ownership",
+                "text": "Neevu yaava maneli vaasisuttiddiro adu nimma svanta maneya?",
+                "type": "multiple_choice",
+                "options": [
+                    "Haudu, nanna svanta mane",
+                    "Illa, badigege tegidkondidini",
+                    "Kutumba sadasyara hesarinalli ide"
+                ],
+                "required": true
+            },
+            {
+                "id": "stay_duration",
+                "text": "Neevu eshtu kaala inde ee sthaladalli vaasisuttiddira?",
+                "type": "multiple_choice",
+                "options": [
+                    "1 varshakinta kammi",
+                    "1-3 varshagalu",
+                    "3-5 varshagalu",
+                    "5-10 varshagalu",
+                    "10 varshagalinda hechchu"
+                ],
+                "required": true
+            }
+        ]
+    },
+    {
+        "category": "Business Details",
+        "questions": [
+            {
+                "id": "business_name",
+                "text": "Nimma business hesaru enu?",
+                "type": "text",
+                "required": true
+            },
+            {
+                "id": "business_duration",
+                "text": "Neevu eshtu kaala inda ee businessnalli iddira?",
+                "type": "multiple_choice",
+                "options": [
+                    "1 varshakinta kammi",
+                    "1-3 varshagalu",
+                    "3-5 varshagalu",
+                    "5-10 varshagalu",
+                    "10 varshagalinda hechchu"
+                ],
+                "required": true
+            },
+            {
+                "id": "business_type",
+                "text": "Idu trading business aadre, idu retail athava wholesale?",
+                "type": "dropdown",
+                "options": [
+                    "Retail",
+                    "Wholesale",
+                    "Eradu",
+                    "Trading business alla",
+                    "Manufacturing",
+                    "Service"
+                ],
+                "required": true
+            },
+            {
+                "id": "business_location",
+                "text": "Nimma business ellideyagi ide?",
+                "type": "text",
+                "validation": {
+                    "minLength": 10
+                },
+                "required": true
+            },
+            {
+                "id": "employee_count",
+                "text": "Neevu eshtu naukarige kelasa kodtidira?",
+                "type": "multiple_choice",
+                "options": [
+                    "0 (naane kelsa maadtini)",
+                    "1-5",
+                    "6-10",
+                    "11-20",
+                    "20 kinta hechchu"
+                ],
+                "required": true
+            },
+            {
+                "id": "business_sector",
+                "text": "Nimma business yaava sector ge seridde?",
+                "type": "dropdown",
+                "options": [
+                    "Retail",
+                    "Manufacturing",
+                    "Services",
+                    "Agriculture",
+                    "Healthcare",
+                    "Education",
+                    "Construction",
+                    "IT",
+                    "Transportation",
+                    "Other"
+                ],
+                "required": true
+            },
+            {
+                "id": "udyam_aadhaar",
+                "text": "Nimma business ge Udyam Aadhaar idiya?",
+                "type": "multiple_choice",
+                "options": [
+                    "Haudu",
+                    "Illa",
+                    "Application process nalli ide"
+                ],
+                "required": true
+            }
+        ]
+    },
+    {
+        "category": "Income Details",
+        "questions": [
+            {
+                "id": "monthly_revenue",
+                "text": "Nimma business tingle baruvantha total income eshtu?",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 4
+                },
+                "required": true
+            },
+            {
+                "id": "monthly_profit",
+                "text": "Nimma business tingle net profit eshtu?",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 4
+                },
+                "required": true
+            },
+            {
+                "id": "monthly_salary",
+                "text": "Neevu elladro job maadiddre, nimma tingle salary eshtu?",
+                "type": "text",
+                "validation": {
+                    "format": "number"
+                },
+                "required": false
+            },
+            {
+                "id": "rental_income",
+                "text": "Nimge yaavudadru property inda baadige barutta? Haudu andre, tingle eshtu?",
+                "type": "text",
+                "validation": {
+                    "format": "number"
+                },
+                "required": false
+            },
+            {
+                "id": "household_expenses",
+                "text": "Nimma mane tingle kharchu eshtu?",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 3
+                },
+                "required": true
+            }
+        ]
+    },
+    {
+        "category": "Property Details",
+        "questions": [
+            {
+                "id": "property_type",
+                "text": "Property type enu?",
+                "type": "multiple_choice",
+                "options": [
+                    "Residential",
+                    "Commercial",
+                    "Industrial",
+                    "Mixed use"
+                ],
+                "required": true
+            },
+            {
+                "id": "property_structure",
+                "text": "Property structure hegide?",
+                "type": "multiple_choice",
+                "options": [
+                    "Svanta property (bhoomi mattu kattada)",
+                    "Kattadadalli unit (flat/angadi/office)",
+                    "Khali bhoomi/plot"
+                ],
+                "required": true
+            },
+            {
+                "id": "occupancy_type",
+                "text": "Property hege upayogisuttiddira?",
+                "type": "multiple_choice",
+                "options": [
+                    "Naanu vaasisuttidini",
+                    "Badigege kottidini",
+                    "Mixed",
+                    "Khali ide"
+                ],
+                "required": true
+            },
+            {
+                "id": "roof_type",
+                "text": "Property machchige yava reetiyaddu?",
+                "type": "multiple_choice",
+                "options": [
+                    "RCC machchige",
+                    "Tiled machchige",
+                    "Sheet machchige",
+                    "Hullu machchige"
+                ],
+                "required": true
+            },
+            {
+                "id": "road_width",
+                "text": "Property munde eshtu agala rasthe ide?",
+                "type": "dropdown",
+                "options": [
+                    "5 feet ginta kammi",
+                    "5 - 10 feet",
+                    "10 - 20 feet",
+                    "20 - 40 feet",
+                    "40 - 60 feet",
+                    "60 - 80 feet",
+                    "80 - 100 feet",
+                    "100 - 150 feet",
+                    "150 feet ginta hechchu"
+                ],
+                "required": true
+            },
+            {
+                "id": "land_area",
+                "text": "Property bhoomi eshtu ide? (square feet nalli)",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 2
+                },
+                "required": true
+            },
+            {
+                "id": "built_up_area",
+                "text": "Property built-up area eshtu ide? (square feet nalli)",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 2
+                },
+                "required": true
+            },
+            {
+                "id": "property_value",
+                "text": "Property estimated bele eshtu?",
+                "type": "text",
+                "validation": {
+                    "format": "number",
+                    "minLength": 5
+                },
+                "required": true
+            },
+            {
+                "id": "property_address",
+                "text": "Property purthi vilasa?",
+                "type": "text",
+                "validation": {
+                    "minLength": 10
+                },
+                "required": true
+            },
+            {
+                "id": "existing_loan",
+                "text": "Ee property mele mundagaade loan idiya?",
+                "type": "multiple_choice",
+                "options": [
+                    "Haudu",
+                    "Illa"
+                ],
+                "required": true
+            },
+            {
+                "id": "existing_emi",
+                "text": "Ippatina loan EMI eshtu?",
+                "type": "text",
+                "validation": {
+                    "format": "number"
+                },
+                "required": false,
+                "conditionalNavigation": {
+                    "Illa": {
+                        "goToQuestion": "property_ownership"
+                    }
+                }
+            },
+            {
+                "id": "property_ownership",
+                "text": "Neevu property odeyara?",
+                "type": "multiple_choice",
+                "options": [
+                    "Haudu",
+                    "Illa"
+                ],
+                "required": true
+            },
+            {
+                "id": "property_owner_name",
+                "text": "Property odeyara purthi hesaru?",
+                "type": "text",
+                "required": false,
+                "conditionalNavigation": {
+                    "Haudu": {
+                        "goToQuestion": "survey_number"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "category": "Property Verification",
+        "questions": [
+            {
+                "id": "survey_number",
+                "text": "Property survey number / khasra number?",
+                "type": "text",
+                "required": false
+            },
+            {
+                "id": "property_document",
+                "text": "Dayavittu property document ondu upload maadi (udaharanege khasra, jamabandi, naksha ityadi)",
+                "type": "file",
+                "allowedTypes": ".pdf,.jpg,.jpeg,.png",
+                "maxSizeInMB": 5,
+                "required": true
+            }
+        ]
+    },
+    {
+        "category": "KYC Details",
+        "questions": [
+            {
+                "id": "aadhaar_number",
+                "text": "Nimma Aadhaar number namudisuvi",
+                "type": "text",
+                "validation": {
+                    "pattern": "^[0-9]{12}$"
+                },
+                "required": true
+            },
+            {
+                "id": "aadhaar_otp",
+                "text": "Nimma Aadhaar ge jodsalpaada mobile number ge kalisidde OTP annu namudisuvi",
+                "type": "otp",
+                "length": 6,
+                "required": true
+            },
+            {
+                "id": "pan_number",
+                "text": "Nimma PAN number namudisuvi",
+                "type": "text",
+                "validation": {
+                    "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]{1}$"
+                },
+                "required": true
+            }
+        ]
+    }
+]

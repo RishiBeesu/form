@@ -1,0 +1,3293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="theme-color" content="#121212">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calm Interactive Form</title>
+    <style>
+
+        :root {
+        /* For a light theme with dark text */
+        --primary-color: #363636;
+        --secondary-color: #212121;
+        --accent-color: #757575;
+        --text-color: #212121;  /* Change to dark text */
+        --background-color: #ffffff;  /* Change to white background */
+        --card-background: #f5f5f5;
+        --metallic-gradient: linear-gradient(145deg, #f5f5f5, #e0e0e0);
+        --highlight-color: #03DAC6; /* Keep teal accent */
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            background-color: var(--background-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            max-width: 100%;
+            padding: 0;
+            position: relative;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .step {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background-color: #3a86ff;
+        }
+
+        .step.completed {
+            background-color: #4bb543;
+        }
+        .optional-tag {
+            font-size: 14px;
+            color: #666;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            padding-top: 60px;
+            padding-bottom: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .form-section {
+            display: none;
+            background: var(--metallic-gradient);
+            border-radius: 12px;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-section.active {
+            display: flex;
+            border-left: 3px solid var(--highlight-color);
+            animation: fadeIn 0.5s;
+        }
+
+        .form-dropdown {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            border-radius: 4px;
+            font-size: 18px;
+            background-color: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+        .language-selector {
+            margin: 10px auto;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        #language-selector {
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .form-dropdown:focus {
+            border-color: var(--highlight-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(3, 218, 198, 0.2);
+        }
+
+        .dropdown-search-container {
+            margin-bottom: 10px;
+        }
+
+        .dropdown-search {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .dropdown-search:focus {
+            border-color: #3a86ff;
+            outline: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question {
+            font-size: 24px;
+            margin-bottom: 30px;
+            font-weight: 500;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .input-container {
+            display: flex;
+            margin: 20px 0;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 18px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #3a86ff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(58, 134, 255, 0.2);
+        }
+
+        .status-display {
+            text-align: center;
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #aaa;
+            font-size: 16px;
+        }
+
+        .status-display.listening {
+            background-color: rgba(3, 218, 198, 0.1);
+            color: var(--highlight-color);
+            animation: gentle-pulse 2s infinite;
+        }
+
+        @keyframes gentle-pulse {
+            0% {
+                background-color: #e8f4f8;
+            }
+
+            50% {
+                background-color: #d1e8f5;
+            }
+
+            100% {
+                background-color: #e8f4f8;
+            }
+        }
+
+        /* CSS for File Upload */
+        .file-upload-container {
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .file-upload-box {
+            border: 2px dashed var(--highlight-color);
+            background-color: rgba(3, 218, 198, 0.05);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-box:hover,
+        .file-upload-box.drag-over {
+            background-color: rgba(3, 218, 198, 0.1);
+            border-color: #2a75e8;
+        }
+
+        .file-upload-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #666;
+        }
+
+        .file-upload-placeholder svg {
+            margin-bottom: 15px;
+            color: #3a86ff;
+        }
+
+        .file-upload-placeholder p {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .file-types-note {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .file-upload-preview {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #333;
+            word-break: break-all;
+        }
+
+        .remove-file-btn {
+            background-color: transparent;
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .remove-file-btn:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .upload-progress {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #3a86ff;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #666;
+            min-width: 40px;
+            text-align: right;
+        }
+
+        /* Add these styles for card animation */
+        .form-section {
+        background: white;
+        border: 0 none;
+        border-radius: 8px;
+        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0 auto;
+        position: absolute;
+        left: 0;
+        right: 0;
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        }
+
+        .form-section.active {
+        position: relative;
+        opacity: 1;
+        z-index: 2;
+        transform: none;
+        animation: fadeIn 0.5s;
+        }
+
+        /* Animation classes for card transitions */
+        .form-section.left {
+        transform: translateX(-100%);
+        opacity: 0;
+        }
+
+        .form-section.right {
+        transform: translateX(100%);
+        opacity: 0;
+        }
+
+        @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(15px) scale(0.97);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        }
+
+        /* Form container needs relative positioning */
+        #form-container {
+        position: relative;
+        min-height: 400px; /* Adjust based on your card height */
+        margin-bottom: 30px;
+        }
+        /* CSS for OTP Input */
+        .otp-container {
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .otp-inputs-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            border-radius: 8px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .otp-input:focus {
+            border-color: var(--highlight-color);
+            box-shadow: 0 0 0 2px rgba(3, 218, 198, 0.2);
+            outline: none;
+        }
+
+        .otp-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .resend-otp-btn {
+            background-color: transparent;
+            color: #3a86ff;
+            border: 1px solid #3a86ff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .resend-otp-btn:hover:not(:disabled) {
+            background-color: #3a86ff;
+            color: white;
+        }
+
+        .resend-otp-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .otp-timer {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Common styles for both file and OTP sections */
+        .next-button {
+            background: var(--highlight-color);
+            color: #121212;
+            font-weight: 500;
+            border-radius: 4px;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .next-button:hover:not(:disabled) {
+        background-color: #00b3a6;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .next-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 480px) {
+            .otp-input {
+                width: 40px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .otp-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .back-button,
+        .next-button {
+            background-color: #3a86ff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button {
+        background-color: rgba(255, 255, 255, 0.08);
+        color: var(--text-color);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-button:hover {
+        background-color: rgba(255, 255, 255, 0.12);
+        }
+
+
+        .next-button:hover {
+            background-color: #2a75e8;
+        }
+
+        .next-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: var(--highlight-color);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-complete {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+            min-height: 70vh;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-complete.active {
+            display: flex;
+            animation: fadeIn 0.5s;
+        }
+
+        .form-complete h2 {
+            color: #3a86ff;
+            margin-bottom: 20px;
+            font-size: 26px;
+        }
+
+        .listening-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 15px 0;
+            height: 30px;
+        }
+
+        .wave {
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background-color: var(--highlight-color);
+            border-radius: 4px;
+            opacity: 0.5;
+        }
+
+        .listening .wave:nth-child(1) {
+            animation: gentle-wave 1.2s infinite;
+        }
+
+        .listening .wave:nth-child(2) {
+            animation: gentle-wave 1.2s infinite 0.2s;
+        }
+
+        .listening .wave:nth-child(3) {
+            animation: gentle-wave 1.2s infinite 0.4s;
+        }
+
+        @keyframes gentle-wave {
+
+            0%,
+            100% {
+                transform: scaleY(0.5);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scaleY(1);
+                opacity: 0.8;
+                box-shadow: 0 0 8px var(--highlight-color);
+
+            }
+        }
+
+        #summary-container {
+            margin: 20px 0;
+            text-align: left;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        #summary-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #summary-container li {
+            margin: 12px 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #restart-button {
+            background-color: #3a86ff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            max-width: 200px;
+            margin: 20px auto 0;
+            transition: all 0.3s ease;
+        }
+
+        #restart-button:hover {
+            background-color: #2a75e8;
+        }
+
+        /* Mobile improvements */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 15px;
+                padding-top: 50px;
+            }
+
+            .form-section {
+                padding: 20px 15px;
+                min-height: 80vh;
+            }
+
+            .question {
+                font-size: 22px;
+                margin-bottom: 25px;
+            }
+
+            input[type="text"] {
+                padding: 12px;
+                font-size: 16px;
+            }
+
+            .navigation-buttons {
+                margin-top: 20px;
+            }
+
+            .back-button,
+            .next-button {
+                padding: 10px 20px;
+                font-size: 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+
+        /* For very small screens */
+        @media (max-width: 380px) {
+            .question {
+                font-size: 20px;
+            }
+
+            .status-display {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .back-button,
+            .next-button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+        /* Category styling */
+        .category-header {
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--highlight-color);
+            width: 100%;
+        }
+
+        .category-header h2 {
+            color: var(--highlight-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 18px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .progress-bar {
+            margin-top: 20px;
+            padding-top: 25px; /* Space for category labels */
+            position: relative;
+        }
+
+        .category-label {
+            color: #666;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Add some visual indication of category in the progress bar */
+        .step[data-category] {
+            position: relative;
+        }
+
+        .step[data-category]:after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background-color: #3a86ff;
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        /* First step of each category gets special marking */
+        .step[data-step]:first-of-type,
+        .step[data-category]:not([data-category=prev-data-category]) {
+            border-left: 2px solid #3a86ff;
+            padding-left: 2px;
+            margin-left: 2px;
+        }
+
+        /* Summary section category grouping */
+        #summary-container .category-group {
+            margin: 20px 0;
+            border-left: 3px solid var(--highlight-color);
+            background-color: rgba(255, 255, 255, 0.03);
+            padding-left: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        #summary-container .category-group h3 {
+            color: var(--highlight-color);
+            margin-bottom: 10px;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="progress-bar" id="progress-bar">
+            <!-- Steps will be dynamically created -->
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <h1>Interactive Form</h1>
+                <p>Please speak or type your answers</p>
+            </div>
+            <div id="form-container">
+                <!-- Sections will be dynamically created -->
+            </div>
+            <div class="language-selector">
+                <select id="language-selector">
+                    <option value="hinglish">हिंग्लिश (Hinglish)</option>
+                    <option value="english">English</option>
+                    <option value="kannada">ಕನ್ನಡ (Kannada)</option>
+                </select>
+            </div>
+            <div class="form-complete" id="completion-screen">
+                <h2>Thank you for completing the form</h2>
+                <p>Your responses have been recorded</p>
+                <div id="summary-container"></div>
+                <button id="restart-button">Start Over</button>
+            </div>
+        </div>
+    </div>
+
+        <script>
+            // Preload all audio files once the page is loaded
+            window.addEventListener('load', function () {
+                // Only preload if we're not on a slow connection
+                if (navigator.connection && navigator.connection.saveData) {
+                    console.log("Save data mode detected, skipping audio preloading");
+                    return;
+                }
+
+                // Get all questions and preload their audio
+                if (window.questions) {
+                    console.log("Preloading audio files...");
+                    questions.forEach(question => {
+                        const audio = new Audio(`audio/${question.id}.mp3`);
+                        audio.preload = 'auto';
+                        document.getElementById('audio-preloader').appendChild(audio);
+                    });
+                    // Also preload completion audio
+                    const completionAudio = new Audio('audio/completion.mp3');
+                    completionAudio.preload = 'auto';
+                    document.getElementById('audio-preloader').appendChild(completionAudio);
+                }
+            });
+        </script>
+    </div>
+    <script>
+        // Add these variables to track timing metrics
+            let metrics = {
+                questionTTSTime: [],
+                questionPlayTime: [],
+                recordingTime: [],
+                transcriptionTime: [],
+                verificationTime: []
+            };
+        // Add this to your JavaScript
+        let currentLanguage = 'hinglish'; // Default language
+
+        let currentAudio = null;
+        // Flag to prevent multiple animations
+        window.animating = false;
+        // API Key (in a real implementation, this should be secured on the server side)
+        fetch('/api/get-key')
+        .then(res => res.json())
+        .then(data => {
+        const API_KEY = data.key;
+        // Use apiKey for your API calls here
+      });
+        let questions = []; // Will be populated from the JSON file
+        function calculateAverage(timeArray) {
+            if (timeArray.length === 0) return 0;
+            const sum = timeArray.reduce((total, item) => total + item.timeMs, 0);
+            return Math.round(sum / timeArray.length);
+        }
+
+        // Add this fallback function
+        async function fallbackToLiveTTS(questionObj, errorDetails) {
+            console.log(`Falling back to live TTS. Error: ${errorDetails}`);
+
+            let textToSpeak = questionObj.text || "Thank you for completing the form.";
+            let instructions = "Speak in a calm, gentle tone. Speak clearly but softly.";
+
+
+            // Language-specific instructions
+            if (currentLanguage === 'hinglish') {
+                instructions = "Speak in a calm, gentle hinglish tone. Speak clearly but softly.";
+                if (!questionObj.text) {
+                    textToSpeak = "धन्यवाद! आपका फॉर्म पूरा हो गया है। Thank you for completing the form.";
+                }
+            } else if (currentLanguage === 'kannada') {
+                instructions = "Speak in a calm, gentle tone mixing Kannada and English. Speak clearly but softly.";
+                if (!questionObj.text) {
+                    textToSpeak = "ಧನ್ಯವಾದಗಳು! ನೀವು ಫಾರ್ಮ್ ಅನ್ನು ಪೂರ್ಣಗೊಳಿಸಿದ್ದೀರಿ. Thank you for completing the form.";
+                }
+            }
+
+            // Add mention of optional status
+            if (questionObj.required === false) {
+                textToSpeak += " This question is optional.";
+            }
+
+            // Customize text based on question type
+            if (questionObj.type === 'file') {
+                textToSpeak += " Please tap the upload area to select a file.";
+            } else if (questionObj.type === 'otp') {
+                textToSpeak += " Please enter the verification code sent to your device.";
+            } else if (questionObj.type === 'dropdown') {
+                textToSpeak += " Please select an option from the dropdown menu.";
+            } else if (questionObj.type === 'multiple_choice') {
+                textToSpeak += " Options are: " + questionObj.options.join(", ");
+            }
+
+            try {
+                // Make an API call to OpenAI TTS
+                const response = await fetch('https://api.openai.com/v1/audio/speech', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-4o-mini-tts",
+                        voice: "shimmer",
+                        input: textToSpeak,
+                        instructions: "Speak in a calm, gentle hinglish tone. Speak clearly but softly.",
+                        response_format: "mp3"
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                // Convert the response to an audio blob
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                return audioUrl;
+            } catch (error) {
+                console.error('Error in fallback TTS:', error);
+                throw error;
+            }
+        }
+
+
+        // Function to load questions from a JSON file
+        async function loadQuestions() {
+            try {
+                const response = await fetch(`questions-${currentLanguage}.json`);
+                if (!response.ok) {
+                    throw new Error(`Failed to load questions: ${response.status}`);
+                }
+
+                // Load the categorized questions
+                const categorizedQuestions = await response.json();
+                console.log("Categorized questions loaded successfully:", categorizedQuestions);
+
+                // Flatten questions for backward compatibility
+                questions = [];
+                categorizedQuestions.forEach(category => {
+                    // Add category information to each question
+                    category.questions.forEach(question => {
+                        question.category = category.category;
+                        questions.push(question);
+                    });
+                });
+
+                console.log("Flattened questions:", questions);
+
+                // Initialize answers object
+                questions.forEach(q => answers[q.id] = '');
+
+                // Store the original categorized structure for rendering
+                window.categorizedQuestions = categorizedQuestions;
+
+                // Initialize the app once questions are loaded
+                createProgressBar();
+                renderFormSections();
+                activateSection(0);
+                setupEventListeners();
+                setupAudioContext();
+                setupDropdownSearch();
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                document.querySelector('.main-content').innerHTML = `
+        <div class="error-message" style="text-align: center; margin-top: 40px;">
+            <h2>Failed to load form questions</h2>
+            <p>Please try refreshing the page or contact support.</p>
+            <p style="color: #666; margin-top: 10px;">Error details: ${error.message}</p>
+        </div>
+        `;
+            }
+        }
+
+        // Add language changing function
+        function changeLanguage(newLanguage) {
+            if (newLanguage === currentLanguage) return;
+
+            // Stop any active processes
+            stopCurrentAudio();
+            if (isRecording && audioRecorder) {
+                stopListening();
+            }
+
+            // Save current answers
+            saveCurrentAnswer();
+
+            // Update current language
+            currentLanguage = newLanguage;
+
+            // Reset the form and load questions in the new language
+            document.getElementById('form-container').innerHTML = '';
+            document.getElementById('completion-screen').classList.remove('active');
+
+            // Reload questions in the new language
+            loadQuestions();
+        }
+
+        
+        
+        // Modify the DOMContentLoaded event listener
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize answers object
+            // Add language selector event listener
+            const languageSelector = document.getElementById('language-selector');
+            if (languageSelector) {
+                languageSelector.addEventListener('change', function () {
+                    changeLanguage(this.value);
+                });
+            }
+
+            // Load questions from JSON file
+            loadQuestions();
+        });
+
+
+
+        // State management
+        let currentSection = 0;
+        const answers = {};
+
+        let isProcessingVoice = false;
+        let audioContext = null;
+        let audioRecorder = null;
+        let isRecording = false;
+        let mediaStream = null;
+
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+        });
+
+        function createProgressBar() {
+            // Function intentionally empty - progress bar removed
+            console.log("Progress bar creation skipped");
+        }
+        
+        // Setup Audio Context    
+        async function setupAudioContext() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                await getAudioPermission();
+            } catch (error) {
+                console.error('Error setting up audio context:', error);
+                const currentStatusDisplay = document.querySelector(`.form-section[data-index="${currentSection}"] .status-display`);
+                if (currentStatusDisplay) {
+                    currentStatusDisplay.textContent = "Please allow microphone access or type your answer";
+                }
+            }
+        }
+
+
+        function setupNavigationLogic() {
+            // Modify the radio button change handlers for multiple choice questions
+            document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+                radio.addEventListener('change', (e) => {
+                    // Stop any playing audio
+                    stopCurrentAudio();
+
+                    const sectionElement = e.target.closest('.form-section');
+                    const questionIndex = parseInt(sectionElement.dataset.index);
+                    const questionId = questions[questionIndex].id;
+
+                    // Save the selected option
+                    answers[questionId] = e.target.value;
+
+                    // Get next section based on conditional logic
+                    const nextSection = getNextSectionIndex(questionIndex);
+
+                    // Auto-advance after selection (with delay)
+                    updateStatusDisplay("Option selected! Moving to next question...");
+                    setTimeout(() => {
+                        activateSection(nextSection);
+                    }, 1500);
+                });
+            });
+
+            // Modify the text input handlers
+            document.querySelectorAll('input[type="text"]:not(.otp-input)').forEach((input) => {
+                let typingTimer;
+
+                const processTextInput = (e) => {
+                    const sectionElement = e.target.closest('.form-section');
+                    const questionIndex = parseInt(sectionElement.dataset.index);
+                    const questionId = questions[questionIndex].id;
+
+                    answers[questionId] = e.target.value;
+                    updateStatusDisplay("Answer received! Moving to next question...");
+
+                    // Get next section based on conditional logic
+                    const nextSection = getNextSectionIndex(questionIndex);
+
+                    // Advance to the next section
+                    setTimeout(() => {
+                        activateSection(nextSection);
+                    }, 1000);
+                };
+
+                // Handle typing pause
+                input.addEventListener('input', (e) => {
+                    clearTimeout(typingTimer);
+                    stopCurrentAudio();
+
+                    if (e.target.value.trim() !== '') {
+                        // Wait for 2 seconds after the user stops typing
+                        typingTimer = setTimeout(() => {
+                            processTextInput(e);
+                        }, 2000);
+                    }
+                });
+
+                // Handle Enter key
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && e.target.value.trim() !== '') {
+                        clearTimeout(typingTimer);
+                        stopCurrentAudio();
+                        processTextInput(e);
+                    }
+                });
+            });
+
+            // Modify dropdown handlers
+            document.querySelectorAll('.form-dropdown').forEach((dropdown) => {
+                dropdown.addEventListener('change', (e) => {
+                    stopCurrentAudio();
+
+                    const sectionElement = e.target.closest('.form-section');
+                    const questionIndex = parseInt(sectionElement.dataset.index);
+                    const questionId = questions[questionIndex].id;
+
+                    answers[questionId] = e.target.value;
+
+                    // Get next section based on conditional logic
+                    const nextSection = getNextSectionIndex(questionIndex);
+
+                    updateStatusDisplay("Option selected! Moving to next question...");
+                    setTimeout(() => {
+                        activateSection(nextSection);
+                    }, 1500);
+                });
+            });
+
+            // File upload handler with conditional logic
+            document.querySelectorAll('.next-button').forEach((button) => {
+                // Only modify next buttons in file upload and OTP sections
+                const sectionElement = button.closest('.form-section');
+                if (!sectionElement) return;
+
+                const questionType = sectionElement.dataset.type;
+                if (questionType === 'file' || questionType === 'otp') {
+                    // Remove existing click listeners and add our own
+                    const clone = button.cloneNode(true);
+                    button.parentNode.replaceChild(clone, button);
+
+                    clone.addEventListener('click', () => {
+                        const questionIndex = parseInt(sectionElement.dataset.index);
+                        const questionId = questions[questionIndex].id;
+
+                        // Only proceed if we have an answer
+                        if (answers[questionId]) {
+                            // Get next section based on conditional logic
+                            const nextSection = getNextSectionIndex(questionIndex);
+                            activateSection(nextSection);
+                        } else {
+                            // Show error if no file/OTP
+                            if (questionType === 'file') {
+                                updateStatusDisplay("Please upload a file first");
+                            } else {
+                                updateStatusDisplay("Please enter the complete OTP");
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Handle back button navigation with awareness of conditional paths
+            document.querySelectorAll('.back-button').forEach((button) => {
+                // Remove existing click listeners and add our own
+                const clone = button.cloneNode(true);
+                button.parentNode.replaceChild(clone, button);
+
+                clone.addEventListener('click', () => {
+                    // Save current answer before navigating
+                    saveCurrentAnswer();
+
+                    // Find the previous visible section - this gets complex with conditional logic
+                    // We need to look at our navigation history
+                    if (navigationHistory.length > 1) {
+                        // Remove current section from history
+                        navigationHistory.pop();
+                        // Go to the previous section in history
+                        const previousSectionIndex = navigationHistory[navigationHistory.length - 1];
+                        activateSection(previousSectionIndex, false); // false = don't record in history
+                    } else {
+                        // Default fallback if no history - just go back one
+                        activateSection(currentSection - 1);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.form-section').forEach((section) => {
+                const questionIndex = parseInt(section.dataset.index);
+                const questionId = section.dataset.questionId;
+                const isRequired = section.dataset.required === 'true';
+                const questionType = section.dataset.type;
+
+                // Skip if this is a file or OTP type (already handled)
+                if (questionType === 'file' || questionType === 'otp') {
+                    return;
+                }
+
+                // Only add next button handler for optional questions
+                if (!isRequired) {
+                    const nextButton = section.querySelector('.next-button');
+                    if (nextButton) {
+                        nextButton.addEventListener('click', () => {
+                            // Save empty answer if nothing was provided
+                            if (!answers[questionId]) {
+                                answers[questionId] = '';
+                            }
+
+                            // Get next section based on conditional logic
+                            const nextSection = getNextSectionIndex(questionIndex);
+                            activateSection(nextSection);
+                        });
+                    }
+                }
+            });
+
+            // Track navigation history for back button functionality
+            window.navigationHistory = [0]; // Start with the first section
+
+            // Update activateSection to track history
+            const originalActivateSection = activateSection;
+            window.activateSection = function (index, recordHistory = true) {
+                if (recordHistory && index !== currentSection) {
+                    navigationHistory.push(index);
+                }
+                originalActivateSection(index);
+            };
+        }
+
+        // Add this helper function to safely navigate back through conditional paths
+        function findPreviousSection(currentIndex) {
+            // Simple case - just go back one if we're not at the start
+            if (currentIndex <= 0) {
+                return 0;
+            }
+
+            // Look for the closest previous question that wasn't skipped due to conditional logic
+            for (let i = currentIndex - 1; i >= 0; i--) {
+                // Check if this question has an answer or is the first question
+                if (i === 0 || answers[questions[i].id] !== undefined) {
+                    return i;
+                }
+            }
+
+            // Fallback
+            return currentIndex - 1;
+        }
+
+
+        // Modify the event listener function
+        function setupEventListeners() {
+            console.log("Setting up event listeners");
+
+            // Restart button listener
+            const restartButton = document.getElementById('restart-button');
+            if (restartButton) {
+                restartButton.addEventListener('click', () => {
+                    // Reset answers
+                    Object.keys(answers).forEach(key => answers[key] = '');
+                    document.getElementById('completion-screen').classList.remove('active');
+                    renderFormSections();
+                    activateSection(0);
+                });
+            }
+
+            // Setup individual input type listeners
+            setupNavigationLogic(); // Use our new function with conditional logic
+            setupRadioButtonListeners();
+            setupTextInputListeners();
+            setupBackButtonListeners();
+            setupDropdownListeners();
+
+            // These functions should be called AFTER sections are rendered
+            // Make them defensive against missing elements
+            setupFileUploadListeners();
+            setupOTPInputListeners();
+        }
+
+        // Setup radio button listeners
+        function setupRadioButtonListeners() {
+            // Add event listeners for radio buttons
+            document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+                radio.addEventListener('change', (e) => {
+                    // Stop any playing audio
+                    stopCurrentAudio();
+
+                    const sectionElement = e.target.closest('.form-section');
+                    const questionIndex = parseInt(sectionElement.dataset.index);
+                    const questionId = questions[questionIndex].id;
+                    const isRequired = sectionElement.dataset.required === 'true';
+
+                    // Save the selected option
+                    answers[questionId] = e.target.value;
+
+                    // Only auto-advance if this is a required question
+                    if (isRequired) {
+                        // Auto-advance after selection (with delay)
+                        updateStatusDisplay("Option selected! Moving to next question...");
+                        setTimeout(() => {
+                            activateSection(questionIndex + 1);
+                        }, 1500);
+                    } else {
+                        // For optional questions, just update the status
+                        updateStatusDisplay("Option selected! Click Next to continue.");
+                    }
+                });
+            });
+        }
+        
+        // Setup text input listeners
+        function setupTextInputListeners() {
+            // Add event listeners for text input fields
+            document.querySelectorAll('input[type="text"]:not(.otp-input)').forEach((input) => {
+                // Add automatic progression when typing stops
+                let typingTimer;
+
+                // Add an immediate audio stop when user starts typing
+                input.addEventListener('focus', (e) => {
+                    stopCurrentAudio();
+                });
+
+                input.addEventListener('input', (e) => {
+                    clearTimeout(typingTimer);
+
+                    // Stop audio when user starts typing
+                    stopCurrentAudio();
+
+                    const sectionElement = e.target.closest('.form-section');
+                    const questionIndex = parseInt(sectionElement.dataset.index);
+                    const questionId = questions[questionIndex].id;
+                    const isRequired = sectionElement.dataset.required === 'true';
+
+                    // Save the current input value
+                    answers[questionId] = e.target.value;
+
+                    if (e.target.value.trim() !== '' && isRequired) {
+                        // Wait for 2 seconds after the user stops typing
+                        typingTimer = setTimeout(() => {
+                            updateStatusDisplay("Answer received! Moving to next question...");
+
+                            // Advance to the next section
+                            setTimeout(() => {
+                                activateSection(questionIndex + 1);
+                            }, 1000);
+                        }, 2000);
+                    }
+                });
+
+                // Enter key to move to next
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        // Stop audio when user presses enter
+                        stopCurrentAudio();
+
+                        const sectionElement = e.target.closest('.form-section');
+                        const questionIndex = parseInt(sectionElement.dataset.index);
+                        const questionId = questions[questionIndex].id;
+                        const isRequired = sectionElement.dataset.required === 'true';
+
+                        // Save the current input value
+                        answers[questionId] = e.target.value;
+
+                        // If required, the input must have a value
+                        // If optional, we can proceed even with empty input
+                        if ((e.target.value.trim() !== '' && isRequired) || !isRequired) {
+                            updateStatusDisplay("Answer received! Moving to next question...");
+
+                            // Automatically move to next section after a brief delay
+                            setTimeout(() => {
+                                activateSection(questionIndex + 1);
+                            }, 1000);
+                        } else {
+                            // Required field but no input
+                            updateStatusDisplay("This question requires an answer.");
+                        }
+                    }
+                });
+            });
+        }
+
+
+
+        // Setup back button listeners
+        function setupBackButtonListeners() {
+            // Add event listeners for back buttons
+            document.querySelectorAll('.back-button').forEach((button) => {
+                button.addEventListener('click', () => {
+                    saveCurrentAnswer();
+                    activateSection(currentSection - 1);
+                });
+            });
+        }
+
+        // Setup dropdown listeners
+        function setupDropdownListeners() {
+            // Add event listeners for dropdown selections
+            document.querySelectorAll('.form-dropdown').forEach((dropdown) => {
+                dropdown.addEventListener('change', (e) => {
+                    // Stop any playing audio
+                    stopCurrentAudio();
+
+                    const sectionElement = e.target.closest('.form-section');
+                    const questionIndex = parseInt(sectionElement.dataset.index);
+                    const questionId = questions[questionIndex].id;
+                    const isRequired = sectionElement.dataset.required === 'true';
+
+                    // Save the selected option
+                    answers[questionId] = e.target.value;
+
+                    // Only auto-advance if this is a required question
+                    if (isRequired) {
+                        // Auto-advance after selection (with delay)
+                        updateStatusDisplay("Option selected! Moving to next question...");
+                        setTimeout(() => {
+                            activateSection(questionIndex + 1);
+                        }, 1500);
+                    } else {
+                        // For optional questions, just update the status
+                        updateStatusDisplay("Option selected! Click Next to continue.");
+                    }
+                });
+            });
+        }
+        
+
+
+
+        // Get user permission for audio
+        async function getAudioPermission() {
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                setupRecorder();
+            } catch (error) {
+                console.error('Error getting audio permission:', error);
+                const currentStatusDisplay = document.querySelector(`.form-section[data-index="${currentSection}"] .status-display`);
+                if (currentStatusDisplay) {
+                    currentStatusDisplay.textContent = "Please allow microphone access or type your answer";
+                }
+            }
+        }
+
+        // Setup recorder
+        function setupRecorder() {
+            const source = audioContext.createMediaStreamSource(mediaStream);
+            audioRecorder = new MediaRecorder(mediaStream);
+
+            const audioChunks = [];
+
+            audioRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    audioChunks.push(event.data);
+                }
+            };
+
+            audioRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                audioChunks.length = 0; // Clear chunks
+
+                try {
+                    await processAudio(audioBlob);
+                } catch (error) {
+                    console.error('Error processing audio:', error);
+                    updateStatusDisplay("I couldn't understand. Please try again.");
+
+                    // Re-enable record button
+                    const recordButton = document.querySelector(`.form-section[data-index="${currentSection}"] .record-button`);
+                    if (recordButton) {
+                        recordButton.disabled = false;
+                    }
+                }
+            };
+        }
+
+        // Modified processWithChatModel function with validation support
+        async function processWithChatModel(transcription, questionContext) {
+            try {
+                // Construct appropriate system message based on question type and validation requirements
+                let systemMessage = "You are a helpful assistant that processes spoken responses.";
+                let userMessage = "";
+
+                // Check if the question has specific validation requirements
+                const validationRules = questionContext.validation || {};
+
+                // Build validation and transformation instructions based on the rules
+                let validationInstructions = "";
+                let transformInstructions = "If possible, transform the user's response to meet the requirements instead of rejecting it. ";
+
+                if (validationRules.language) {
+                    validationInstructions += `The answer must be in ${validationRules.language} language. `;
+                    transformInstructions += `If the user responds in a different language, translate it to ${validationRules.language}. `;
+                }
+                if (validationRules.format === 'number') {
+                    validationInstructions += `The answer must be a number. `;
+                    transformInstructions += `If the user provides a number in words (like 'twenty-five'), convert it to digits (25). `;
+                }
+                if (validationRules.minLength) {
+                    validationInstructions += `The answer must be at least ${validationRules.minLength} characters long. `;
+                }
+                if (validationRules.pattern) {
+                    validationInstructions += `The answer must match the pattern: ${validationRules.pattern}. `;
+                    transformInstructions += `Try to format their answer to match this pattern if possible. `;
+                }
+
+                // Add transformation instructions to the system message
+                systemMessage += " " + transformInstructions;
+
+                if (questionContext.type === 'multiple_choice') {
+                    systemMessage += " For multiple choice questions, identify which option the user has selected and return it in JSON format with a 'selectedOption' field.";
+                    systemMessage += validationInstructions ? ` ${validationInstructions}` : "";
+                    systemMessage += " Return your response in this JSON format: {\"selectedOption\": \"user's selection\", \"isValid\": true/false, \"transformedAnswer\": \"answer after any transformations\", \"errorMessage\": \"explanation if invalid\"}";
+
+                    userMessage = `For the multiple choice question: "${questionContext.text}", with options: ${JSON.stringify(questionContext.options)}, the user's spoken response was: "${transcription}". Return JSON with the selected option and validation results.`;
+                } else {
+                    systemMessage += " Extract only the direct answer to the question and return it in JSON format with a 'textAnswer' field.";
+                    systemMessage += validationInstructions ? ` ${validationInstructions}` : "";
+                    systemMessage += " Return your response in this JSON format: {\"textAnswer\": \"user's answer\", \"isValid\": true/false, \"transformedAnswer\": \"answer after any transformations\", \"errorMessage\": \"explanation if invalid\"}";
+
+                    userMessage = `For the question: "${questionContext.text}", the user's spoken response was: "${transcription}". Return JSON with the clean answer and validation results.`;
+                }
+
+                // Make API call to OpenAI Chat model
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-4o-mini",
+                        messages: [
+                            {
+                                role: "system",
+                                content: systemMessage
+                            },
+                            {
+                                role: "user",
+                                content: userMessage
+                            }
+                        ],
+                        response_format: { type: "json_object" }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Chat API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const jsonResponse = JSON.parse(data.choices[0].message.content.trim());
+
+                console.log("Original transcription:", transcription);
+                console.log("Processed JSON response:", jsonResponse);
+
+                // Add validation result if not already present
+                if (jsonResponse.isValid === undefined) {
+                    jsonResponse.isValid = true; // Default to valid if not specified
+                }
+
+                return jsonResponse;
+            } catch (error) {
+                console.error('Error in chat processing:', error);
+                // Return a default response if processing fails
+                return questionContext.type === 'multiple_choice'
+                    ? { selectedOption: null, isValid: false, errorMessage: "Failed to process response" }
+                    : { textAnswer: transcription, isValid: false, errorMessage: "Failed to process response" };
+            }
+        }
+
+        // Updated processAudio function that handles validation results
+        async function processAudio(audioBlob) {
+            if (isProcessingVoice) {
+                console.log("Already processing voice, ignoring new request");
+                return;
+            }
+
+            isProcessingVoice = true;
+            updateStatusDisplay("Processing your response...");
+
+            try {
+                // Start timing STT
+                const sttStartTime = performance.now();
+
+                // Create a FormData object to send the audio file
+                const formData = new FormData();
+                formData.append('file', audioBlob, 'recording.webm');
+                formData.append('model', 'gpt-4o-mini-transcribe');
+
+                // Make API call to OpenAI for transcription
+                const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const transcription = data.text;
+                // End timing STT
+                const sttEndTime = performance.now();
+                metrics.transcriptionTime.push({
+                    transcription: transcription.substring(0, 30) + "...",
+                    timeMs: sttEndTime - sttStartTime
+                });
+        
+
+                console.log("Transcription received:", transcription);
+
+                // Store current section to ensure we're updating the right one
+                // even if other code changes currentSection
+                const sectionToUpdate = currentSection;
+                const sectionElement = document.querySelector(`.form-section[data-index="${sectionToUpdate}"]`);
+                const isRequired = sectionElement.dataset.required === 'true';
+
+                // Get current question details
+                const currentQuestion = questions[sectionToUpdate];
+
+                // For file and OTP inputs, handle them differently
+                if (currentQuestion.type === 'file') {
+                    // For file uploads, we can only provide guidance via voice
+                    updateStatusDisplay("Please tap to select a file to upload");
+                    isProcessingVoice = false;
+                    return;
+                }
+
+                if (currentQuestion.type === 'otp') {
+                    // For OTP, try to extract digits from speech
+                    const otpMatch = transcription.match(/\d+/g);
+
+                    if (otpMatch && otpMatch.length > 0) {
+                        const otpDigits = otpMatch[0].split('');
+                        const otpInputs = document.querySelectorAll(`.form-section[data-index="${sectionToUpdate}"] .otp-input`);
+
+                        // Fill in OTP boxes with recognized digits
+                        for (let i = 0; i < otpInputs.length && i < otpDigits.length; i++) {
+                            otpInputs[i].value = otpDigits[i];
+                        }
+
+                        // Check if we have a complete OTP
+                        const nextButton = document.querySelector(`.form-section[data-index="${sectionToUpdate}"] .next-button`);
+                        checkOTPCompletion(otpInputs, currentQuestion.id, nextButton);
+
+                        updateStatusDisplay("OTP entered. Please verify and continue.");
+                        isProcessingVoice = false;
+                        return;
+                    } else {
+                        updateStatusDisplay("I couldn't detect any numbers. Please enter the OTP manually.");
+                        isProcessingVoice = false;
+                        return;
+                    }
+                }
+
+                // Start timing verification
+                const verificationStartTime = performance.now();
+
+                
+                // Process the transcription with the chat model (including validation)
+                const processedResponse = await processWithChatModel(transcription, currentQuestion);
+
+
+                // End timing verification
+                const verificationEndTime = performance.now();
+                metrics.verificationTime.push({
+                    timeMs: verificationEndTime - verificationStartTime
+                });
+
+                // Check if the response passed validation
+                if (!processedResponse.isValid) {
+                    // Response didn't meet validation requirements
+                    updateStatusDisplay(processedResponse.errorMessage || "Your response doesn't meet the requirements. Please try again.");
+                    isProcessingVoice = false;
+                    return;
+                }
+
+                // Update the answer based on question type (only if valid)
+                if (currentQuestion.type === 'multiple_choice') {
+                    // For multiple choice, find and select the matching option
+                    // Use transformed answer if available, otherwise use selectedOption
+                    const answerToUse = processedResponse.transformedAnswer || processedResponse.selectedOption;
+
+                    if (answerToUse) {
+                        const optionIndex = currentQuestion.options.findIndex(
+                            option => option.toLowerCase().includes(answerToUse.toLowerCase())
+                        );
+
+                        if (optionIndex >= 0) {
+                            const radioButton = document.querySelector(`#option-${sectionToUpdate}-${optionIndex}`);
+                            if (radioButton) {
+                                radioButton.checked = true;
+                                answers[currentQuestion.id] = currentQuestion.options[optionIndex];
+                            }
+                        }
+                    }
+                } else {
+                    // For text input, update the input field
+                    // Use transformed answer if available, otherwise use textAnswer
+                    const answerToUse = processedResponse.transformedAnswer || processedResponse.textAnswer;
+
+                    const currentInput = document.querySelector(`.form-section[data-index="${sectionToUpdate}"] input[type="text"]`);
+                    if (currentInput && answerToUse) {
+                        currentInput.value = answerToUse;
+                        answers[currentQuestion.id] = answerToUse;
+
+                        // If we used a transformed answer, let the user know
+                        if (processedResponse.transformedAnswer && processedResponse.transformedAnswer !== processedResponse.textAnswer) {
+                            updateStatusDisplay(`I understood: "${answerToUse}"`);
+                        }
+                    }
+                }
+
+                isProcessingVoice = false;
+                // Only auto-advance if this is a required question and has a valid answer
+                const hasValidAnswer = answers[currentQuestion.id] && answers[currentQuestion.id] !== '';
+
+                if (isRequired && hasValidAnswer) {
+                    updateStatusDisplay("Answer received! Moving to next question...");
+
+                    // Use the stored section index for the next step
+                    setTimeout(() => {
+                        // Double check we're still on the same section and the navigation hasn't already happened
+                        if (currentSection === sectionToUpdate) {
+                            saveCurrentAnswer();
+                            activateSection(sectionToUpdate + 1);
+                        }
+                    }, 1500);
+                } else if (!isRequired) {
+                    updateStatusDisplay("Answer received! Click Next to continue.");
+                } else {
+                    // Required but no valid answer
+                    updateStatusDisplay("Please provide an answer or try again.");
+                }
+
+            } catch (error) {
+                console.error('Error in API call:', error);
+                isProcessingVoice = false;
+                updateStatusDisplay("Error processing your speech. Please try again or type your answer.");
+            }
+        }
+
+
+        // Start listening
+        function startListening() {
+            if (isRecording || !audioRecorder || isProcessingVoice) {
+                console.log("Cannot start listening - already recording or processing");
+                return;
+            }
+
+            try {
+                // Ensure we have a fresh recorder
+                if (mediaStream) {
+                    setupRecorder();
+                }
+
+                // Start timing the recording
+                window.recordingStartTime = performance.now();
+
+                // Request data every 100ms to get frequent updates
+                audioRecorder.start(100);
+                isRecording = true;
+                updateListeningStatus(true);
+                updateStatusDisplay("I'm listening...");
+
+                // Clear any existing analyzer node
+                if (window.analyzerNode) {
+                    try {
+                        window.analyzerNode.disconnect();
+                    } catch (e) {
+                        console.log("Error disconnecting old analyzer", e);
+                    }
+                }
+
+                // Clear any existing silence timeout
+                if (window.silenceTimeout) {
+                    clearTimeout(window.silenceTimeout);
+                    window.silenceTimeout = null;
+                }
+
+                let speechDetected = false;
+                let silenceDelay = 1500; // 1.5 seconds of silence before stopping
+                let initialDelay = 1000; // 1 second initial delay before monitoring silence
+                let startTime = Date.now();
+
+                // Create a fresh analyzer node to monitor audio levels
+                window.analyzerNode = audioContext.createAnalyser();
+                window.analyzerNode.fftSize = 256;
+                const bufferLength = window.analyzerNode.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+
+                // Connect the analyzer to the audio source
+                const source = audioContext.createMediaStreamSource(mediaStream);
+                source.connect(window.analyzerNode);
+
+                // Function to check audio levels
+                const checkAudioLevel = () => {
+                    if (!isRecording) return;
+
+                    window.analyzerNode.getByteFrequencyData(dataArray);
+
+                    // Calculate average volume
+                    let sum = 0;
+                    for (let i = 0; i < bufferLength; i++) {
+                        sum += dataArray[i];
+                    }
+                    const average = sum / bufferLength;
+
+                    // Only start detecting silence after initial delay
+                    if (Date.now() - startTime < initialDelay) {
+                        requestAnimationFrame(checkAudioLevel);
+                        return;
+                    }
+
+                    const SILENCE_THRESHOLD = 160;
+
+                    // Check if speech is detected
+                    if (average > SILENCE_THRESHOLD) {
+                        speechDetected = true;
+
+                        // NEW: If there's audio playing and we detect speech, stop it
+                        if (currentAudio) {
+                            console.log("User started speaking - stopping audio playback");
+                            stopCurrentAudio();
+                        }
+
+                        if (window.silenceTimeout) {
+                            clearTimeout(window.silenceTimeout);
+                            window.silenceTimeout = null;
+                        }
+                    } else if (speechDetected && !window.silenceTimeout) {
+                        window.silenceTimeout = setTimeout(() => {
+                            console.log("Silence detected, stopping recording");
+                            stopListening();
+                        }, silenceDelay);
+                    }
+
+                    // Continue checking audio levels
+                    if (isRecording) {
+                        requestAnimationFrame(checkAudioLevel);
+                    }
+                };
+
+                // Start checking audio levels
+                checkAudioLevel();
+
+                // Safety timeout - if speech detection doesn't trigger,
+                // stop recording after 5 seconds automatically
+                window.safetyTimeout = setTimeout(() => {
+                    if (isRecording) {
+                        console.log("Safety timeout reached, stopping recording");
+                        stopListening();
+                    }
+                }, 5000);
+
+            } catch (e) {
+                console.error('Error starting recording:', e);
+                updateListeningStatus(false);
+                updateStatusDisplay("Error starting microphone. Please try again.");
+            }
+        }
+
+        // Stop listening
+        function stopListening() {
+            if (!isRecording || !audioRecorder) return;
+
+            try {
+                // End timing the recording
+                const recordingEndTime = performance.now();
+                metrics.recordingTime.push({
+                    timeMs: recordingEndTime - window.recordingStartTime
+                });
+
+                // Disconnect analyzer node if it exists
+                if (window.analyzerNode) {
+                    window.analyzerNode.disconnect();
+                }
+
+                // Clear any ongoing silence timeout
+                if (window.silenceTimeout) {
+                    clearTimeout(window.silenceTimeout);
+                    window.silenceTimeout = null;
+                }
+
+                audioRecorder.stop();
+                isRecording = false;
+                updateListeningStatus(false);
+                updateStatusDisplay("Processing your response...");
+            } catch (e) {
+                console.error('Error stopping recording:', e);
+                updateStatusDisplay("Error stopping recording. Please try again.");
+            }
+        }
+
+
+        // Update the visual listening status
+        function updateListeningStatus(isListening) {
+            const listeningIndicator = document.querySelector(`.form-section[data-index="${currentSection}"] .listening-indicator`);
+
+            if (listeningIndicator) {
+                if (isListening) {
+                    listeningIndicator.classList.add('listening');
+                } else {
+                    listeningIndicator.classList.remove('listening');
+                }
+            }
+        }
+
+        // Update status display
+        function updateStatusDisplay(message) {
+            const statusDisplay = document.querySelector(`.form-section[data-index="${currentSection}"] .status-display`);
+
+            if (statusDisplay) {
+                statusDisplay.textContent = message;
+                statusDisplay.classList.toggle('listening', isRecording);
+            }
+        }
+
+        // NEW: Function to handle user clicking on screen while audio is playing
+        function handleUserInteraction(event) {
+            // If we have audio playing and user interacts
+            if (currentAudio) {
+                console.log("User interaction detected - stopping audio playback");
+                stopCurrentAudio();
+
+                // Start listening right away
+                updateStatusDisplay("I'm listening...");
+                setTimeout(() => {
+                    startListening();
+                }, 300);
+            }
+
+            // If the interaction was on a form element that needs focus, don't interfere
+            const interactiveElements = ['INPUT', 'SELECT', 'BUTTON', 'TEXTAREA'];
+            if (interactiveElements.includes(event.target.tagName)) {
+                return;
+            }
+        }
+
+        // Add a helper function to stop any playing audio
+        function stopCurrentAudio() {
+            if (currentAudio) {
+                // Prevent any further event handling
+                currentAudio.onended = null;
+
+                // Stop playback
+                currentAudio.pause();
+
+                // Reset to beginning
+                currentAudio.currentTime = 0;
+
+                // Clear source
+                currentAudio.src = "";
+
+                // Release object
+                currentAudio = null;
+
+                // Remove any one-time click listeners we might have added
+                document.removeEventListener('click', handleUserInteraction);
+
+                console.log("Stopped current audio playback and cleaned up resources");
+            }
+        }
+        
+        function setupDropdownSearch() {
+            document.querySelectorAll('.form-section[data-type="dropdown"]').forEach(section => {
+                const index = section.dataset.index;
+                const dropdown = section.querySelector(`#dropdown-${index}`);
+
+                // Create and insert search input before dropdown
+                const searchContainer = document.createElement('div');
+                searchContainer.className = 'dropdown-search-container';
+                searchContainer.innerHTML = `
+                <input type="text" class="dropdown-search" 
+                    placeholder="Type to search options..." 
+                    id="search-${index}">
+            `;
+
+                dropdown.parentNode.insertBefore(searchContainer, dropdown);
+
+                // Add search functionality
+                const searchInput = section.querySelector(`#search-${index}`);
+                searchInput.addEventListener('input', (e) => {
+                    const searchText = e.target.value.toLowerCase();
+                    const options = dropdown.querySelectorAll('option');
+
+                    options.forEach(option => {
+                        if (option.value === '') return; // Skip placeholder option
+
+                        const matches = option.textContent.toLowerCase().includes(searchText);
+                        option.style.display = matches ? '' : 'none';
+                    });
+                });
+            });
+        }
+
+        // Call this after rendering form sections
+        setupDropdownSearch();
+
+        // Text-to-Speech using OpenAI API
+        async function speakText(questionObj) {
+            // Reset any error state and show loading message
+            updateStatusDisplay("Loading voice...");
+
+            // Reset processing state
+            isProcessingVoice = false;
+
+            // First ensure any existing audio is stopped
+            stopCurrentAudio();
+
+            // Add a flag to track if this request is still valid
+            const requestId = Date.now();
+            window.currentSpeakRequestId = requestId;
+
+            try {
+                // Try to use the pre-saved audio file
+                let audioSrc = questionObj.id
+                    ? `audio/${currentLanguage}/${questionObj.id}.mp3`
+                    : `audio/${currentLanguage}/completion.mp3`;
+
+                // Create a new audio element every time
+                let audioElement = new Audio();
+
+                // Test if the file exists by trying to load it
+                let fileExistsPromise = new Promise((resolve, reject) => {
+                    // Set timeout for file loading
+                    let timeout = setTimeout(() => {
+                        reject(new Error("Audio file load timeout"));
+                    }, 2000);
+
+                    // Configure the audio element
+                    audioElement.src = audioSrc;
+
+                    // File loaded successfully
+                    audioElement.oncanplaythrough = () => {
+                        clearTimeout(timeout);
+                        resolve(true);
+                    };
+
+                    // Error loading file
+                    audioElement.onerror = () => {
+                        clearTimeout(timeout);
+                        reject(new Error("Audio file not found"));
+                    };
+                });
+
+                try {
+                    // Wait for file to load or timeout
+                    await fileExistsPromise;
+                    console.log("Using pre-saved audio file:", audioSrc);
+                } catch (fileError) {
+                    // File doesn't exist or couldn't load, use fallback
+                    console.warn("Pre-saved audio not available:", fileError.message);
+                    audioSrc = await fallbackToLiveTTS(questionObj, fileError.message);
+
+                    // Create a new audio element for the fallback source
+                    audioElement = new Audio();
+                    audioElement.src = audioSrc;
+                }
+
+                // Check if this request is still the current one
+                if (window.currentSpeakRequestId !== requestId) {
+                    console.log("Request superseded by newer request, aborting");
+                    return;
+                }
+
+                // Start timing audio playback
+                const playStartTime = performance.now();
+
+                // Store reference to the current audio globally
+                if (currentAudio) {
+                    stopCurrentAudio();
+                }
+                currentAudio = audioElement;
+
+                // When speech ends, start listening immediately
+                audioElement.onended = () => {
+                    // Check if this is still the current audio
+                    if (currentAudio !== audioElement) return;
+
+                    const playEndTime = performance.now();
+                    metrics.questionPlayTime.push({
+                        question: questionObj.text ? questionObj.text.substring(0, 30) + "..." : "completion",
+                        timeMs: playEndTime - playStartTime
+                    });
+
+                    updateStatusDisplay("I'm listening...");
+
+                    // Small delay before starting to listen to ensure complete reset
+                    setTimeout(() => {
+                        startListening();
+                        currentAudio = null;
+                    }, 300);
+                };
+
+                // Add event listener for user interaction
+                document.addEventListener('click', handleUserInteraction, { once: true });
+
+                // Start audio playback
+                await audioElement.play();
+
+            } catch (error) {
+                console.error('Error in TTS:', error);
+                updateStatusDisplay("Please read the question and provide your answer");
+                setTimeout(() => {
+                    startListening();
+                }, 1000);
+            }
+        }
+
+
+        // Render form sections based on question type and categories
+        function renderFormSections() {
+            const formContainer = document.getElementById('form-container');
+            formContainer.innerHTML = '';
+
+            let currentCategory = null;
+            let globalIndex = 0;
+
+            questions.forEach((question, index) => {
+
+                // Create section element
+                const section = document.createElement('div');
+                section.className = 'form-section';
+                // With this:
+                if (index > 0) {
+                    section.classList.add('right'); // Only add the class if condition is true
+                }
+                section.dataset.index = index;
+
+                // Only add a header when transitioning to a new category
+                if (question.category !== currentCategory) {
+                    currentCategory = question.category;
+                    const categoryHeader = document.createElement('div');
+                    categoryHeader.className = 'category-header';
+                    categoryHeader.innerHTML = `<h2>${currentCategory}</h2>`;
+                    // Attach a data attribute so you can easily target this header with CSS/JS later
+                    categoryHeader.dataset.category = currentCategory;
+                    formContainer.appendChild(categoryHeader);
+                }
+
+                section.className = 'form-section';
+                section.dataset.index = globalIndex;
+                section.dataset.type = question.type;
+                section.dataset.questionId = question.id;
+                section.dataset.category = question.category;
+                section.dataset.required = question.required !== false; // Default to true if not specified
+
+                // Create the back button (hide it on the first section)
+                const backButton = globalIndex > 0 ?
+                    `<button class="back-button">Back</button>` :
+                    `<button class="back-button" style="visibility:hidden">Back</button>`;
+
+                let inputHtml = '';
+                let nextButtonHtml = '';
+
+                // Add next button for optional questions and already supported types
+                const showNextButton = !question.required || question.type === 'file' || question.type === 'otp';
+                if (showNextButton) {
+                    nextButtonHtml = `<button class="next-button" ${question.type !== 'file' && question.type !== 'otp' ? '' : 'style="display:none"'}>Next</button>`;
+                }
+
+                // Add a next button for file and OTP types
+                if (question.type === 'file' || question.type === 'otp') {
+                    nextButtonHtml = `<button class="next-button" style="display:none">Next</button>`;
+                }
+
+                // Render input HTML based on question type
+                if (question.type === 'multiple_choice') {
+                    inputHtml = `
+                    <div class="options-container">
+                        ${question.options.map((option, optIndex) => `
+                            <div class="option-item">
+                                <input type="radio" id="option-${globalIndex}-${optIndex}" name="question-${globalIndex}" value="${option}" ${answers[question.id] === option ? 'checked' : ''}>
+                                <label for="option-${globalIndex}-${optIndex}">${option}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                } else if (question.type === 'dropdown') {
+                    inputHtml = `
+                    <div class="input-container">
+                        <select class="form-dropdown" id="dropdown-${globalIndex}">
+                            <option value="" disabled selected>Please select...</option>
+                            ${question.options.map(option =>
+                        `<option value="${option}" ${answers[question.id] === option ? 'selected' : ''}>${option}</option>`
+                    ).join('')}
+                        </select>
+                    </div>
+                `;
+                } else if (question.type === 'file') {
+                    inputHtml = `
+                    <div class="file-upload-container">
+                        <div class="file-upload-box" id="file-upload-box-${globalIndex}">
+                            <input type="file" id="file-upload-${globalIndex}" class="file-upload-input" 
+                                accept="${question.allowedTypes || '*'}" style="display:none;">
+                            <div class="file-upload-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <p>Click or drag file to upload</p>
+                                <span class="file-types-note">${question.allowedTypes || 'All files'} (max ${question.maxSizeInMB || 10}MB)</span>
+                            </div>
+                            <div class="file-upload-preview" style="display:none;">
+                                <div class="file-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                    <span class="file-name">No file selected</span>
+                                </div>
+                                <button class="remove-file-btn">Remove</button>
+                            </div>
+                        </div>
+                        <div class="upload-progress" style="display:none;">
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 0%;"></div>
+                            </div>
+                            <span class="progress-text">0%</span>
+                        </div>
+                    </div>
+                `;
+                } else if (question.type === 'otp') {
+                    const otpLength = question.length || 6;
+                    let otpInputsHtml = '';
+                    for (let i = 0; i < otpLength; i++) {
+                        otpInputsHtml += `
+                        <input type="text" 
+                            class="otp-input" 
+                            maxlength="1" 
+                            id="otp-${globalIndex}-${i}" 
+                            data-index="${i}" 
+                            pattern="[0-9]"
+                            inputmode="numeric">
+                    `;
+                    }
+                    inputHtml = `
+                    <div class="otp-container">
+                        <div class="otp-inputs-container">
+                            ${otpInputsHtml}
+                        </div>
+                        <div class="otp-actions">
+                            <button class="resend-otp-btn">Resend OTP</button>
+                            <div class="otp-timer">Resend in <span class="countdown">30</span>s</div>
+                        </div>
+                    </div>
+                `;
+                } else {
+                    inputHtml = `
+                    <div class="input-container">
+                        <input type="text" placeholder="Type your answer here..." value="${answers[question.id] || ''}">
+                    </div>
+                `;
+                }
+
+                section.innerHTML = `
+                <div class="question">
+                    ${question.text}
+                    ${question.required === false ? '<span class="optional-tag">(Optional)</span>' : ''}
+                </div>
+                <div class="status-display">Please wait...</div>
+                <div class="listening-indicator">
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                </div>
+                ${inputHtml}
+                <div class="navigation-buttons">
+                    ${backButton}
+                    ${nextButtonHtml}
+                </div>
+            `;
+
+                formContainer.appendChild(section);
+                globalIndex++;
+            });
+
+            // Add active class only to the first section initially
+            const firstSection = document.querySelector('.form-section[data-index="0"]');
+            if (firstSection) {
+                firstSection.classList.add('active');
+                firstSection.classList.remove('right', 'left');
+            }
+
+        }
+            
+
+
+
+        
+        // Save the current answer
+        function saveCurrentAnswer() {
+            const currentQuestion = questions[currentSection];
+
+            if (currentQuestion.type === 'multiple_choice') {
+                const selectedRadio = document.querySelector(`.form-section[data-index="${currentSection}"] input[type="radio"]:checked`);
+                if (selectedRadio) {
+                    answers[currentQuestion.id] = selectedRadio.value;
+                }
+            } else {
+                const input = document.querySelector(`.form-section[data-index="${currentSection}"] input[type="text"]`);
+                if (input && input.value.trim() !== '') {
+                    answers[currentQuestion.id] = input.value;
+                }
+            }
+        }
+
+        function updateCategoryHeaderVisibility() {
+            // Hide all category headers first
+            document.querySelectorAll('.category-header').forEach(header => {
+                header.classList.remove('active');
+            });
+
+            // Show only the current category header
+            if (currentSection < questions.length) {
+                const currentCategory = questions[currentSection].category;
+                const categoryHeader = document.querySelector(`.category-header[data-category="${currentCategory}"]`);
+                if (categoryHeader) {
+                    categoryHeader.classList.add('active');
+                }
+            }
+        }
+
+        // 4. Add the CSS for the new current category display
+        const categoryDisplayStyles = document.createElement('style');
+        categoryDisplayStyles.textContent = `
+            /* New current category display styling */
+            .current-category {
+                position: absolute;
+                top: -25px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-weight: 500;
+                color: #3a86ff;
+                font-size: 14px;
+                text-align: center;
+                padding: 4px 8px;
+                background-color: white;
+                border-radius: 4px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            }
+            
+            /* Hide all category headers initially */
+            .category-header {
+                display: none;
+            }
+            
+            /* Only show the category header for the active section's category */
+            .category-header[data-category].active {
+                display: block;
+            }
+            
+            /* Updated progress bar styling */
+            .progress-bar {
+                margin-top: 30px; /* More space for category display */
+                padding-top: 5px; /* Reduced from 25px since we don't have labels */
+            }
+        `;
+        document.head.appendChild(categoryDisplayStyles);
+
+        // Setup file upload listeners
+        function setupFileUploadListeners() {
+            // For each file upload section
+            document.querySelectorAll('.form-section[data-type="file"]').forEach(section => {
+                const index = section.dataset.index;
+                const questionId = section.dataset.questionId;
+                const fileInput = section.querySelector(`#file-upload-${index}`);
+                const fileBox = section.querySelector(`#file-upload-box-${index}`);
+
+                // Check if elements exist before accessing them
+                if (!fileInput || !fileBox) {
+                    console.warn(`File upload elements not found for section ${index}`);
+                    return;
+                }
+
+                const filePreview = section.querySelector('.file-upload-preview');
+                const fileName = section.querySelector('.file-name');
+                const removeBtn = section.querySelector('.remove-file-btn');
+                const progressBar = section.querySelector('.upload-progress');
+                const progressFill = section.querySelector('.progress-bar-fill');
+                const progressText = section.querySelector('.progress-text');
+                const placeholder = section.querySelector('.file-upload-placeholder');
+
+                // Add next button if it doesn't exist
+                let nextButton = section.querySelector('.next-button');
+                if (!nextButton) {
+                    nextButton = document.createElement('button');
+                    nextButton.className = 'next-button';
+                    nextButton.textContent = 'Next';
+                    nextButton.style.display = 'none';
+
+                    // Get the navigation buttons container
+                    const navButtons = section.querySelector('.navigation-buttons');
+                    if (navButtons) {
+                        navButtons.appendChild(nextButton);
+                    }
+                }
+
+                // Modified click handler - we create a proper click handler for the placeholder
+                const uploadPlaceholder = section.querySelector('.file-upload-placeholder');
+                if (uploadPlaceholder) {
+                    uploadPlaceholder.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Add this line to prevent bubbling
+                        console.log('Placeholder clicked - opening file dialog directly');
+                        // Don't use preventDefault or stopPropagation here
+                        fileInput.click();
+                    });
+                }
+
+                // Also keep the outer box click handler as a fallback, but simplify it
+                fileBox.addEventListener('click', (e) => {
+                    console.log('File box clicked');
+                    // Only trigger if not clicking remove button and not already in preview mode
+                    if (removeBtn && (removeBtn.contains(e.target) || e.target === removeBtn)) {
+                        // Click was on the remove button, don't open file dialog
+                        return;
+                    }
+
+                    // Check if we're in preview mode
+                    if (filePreview && filePreview.style.display === 'flex') {
+                        // Already have a file, don't open dialog unless clicking on placeholder
+                        return;
+                    }
+
+                    console.log('Attempting to open file dialog from box click');
+                    // Don't use preventDefault or stopPropagation - let the event flow naturally
+                    fileInput.click();
+                });
+
+                // Handle file selection
+                fileInput.addEventListener('change', (e) => {
+                    console.log('File input changed', fileInput.files);
+                    if (fileInput.files.length > 0) {
+                        const file = fileInput.files[0];
+                        const question = questions[index];
+
+                        // Validate file size
+                        const maxSizeInBytes = (question.maxSizeInMB || 10) * 1024 * 1024;
+                        if (file.size > maxSizeInBytes) {
+                            updateStatusDisplay(`File too large! Maximum size is ${question.maxSizeInMB || 10}MB`);
+                            return;
+                        }
+
+                        // Validate file type if restricted
+                        if (question.allowedTypes) {
+                            const allowedExtensions = question.allowedTypes.split(',');
+                            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+
+                            if (!allowedExtensions.includes(fileExtension)) {
+                                updateStatusDisplay(`Invalid file type! Allowed types: ${question.allowedTypes}`);
+                                return;
+                            }
+                        }
+
+                        // Update UI to show selected file
+                        if (fileName && filePreview && placeholder) {
+                            fileName.textContent = file.name;
+                            placeholder.style.display = 'none';
+                            filePreview.style.display = 'flex';
+                            nextButton.style.display = 'block';
+                        }
+
+                        // Store file reference
+                        answers[questionId] = {
+                            file: file,
+                            name: file.name,
+                            size: file.size,
+                            type: file.type
+                        };
+
+                        // Simulate upload progress
+                        if (progressBar && progressFill && progressText) {
+                            simulateFileUpload(progressBar, progressFill, progressText, nextButton);
+                        }
+                    }
+                });
+
+                // Rest of your existing code (for remove button, drag-drop, etc.) remains the same...
+                // Handle remove button click
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+
+                        // Reset file input
+                        fileInput.value = '';
+
+                        // Update UI
+                        if (placeholder && filePreview && progressBar) {
+                            placeholder.style.display = 'block';
+                            filePreview.style.display = 'none';
+                            progressBar.style.display = 'none';
+                            nextButton.style.display = 'none';
+                        }
+
+                        // Remove file from answers
+                        answers[questionId] = '';
+                    });
+                }
+
+                // Handle drag and drop
+                fileBox.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    fileBox.classList.add('drag-over');
+                });
+
+                fileBox.addEventListener('dragleave', (e) => {
+                    e.preventDefault();
+                    fileBox.classList.remove('drag-over');
+                });
+
+                fileBox.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    fileBox.classList.remove('drag-over');
+
+                    if (e.dataTransfer.files.length > 0) {
+                        fileInput.files = e.dataTransfer.files;
+                        const changeEvent = new Event('change');
+                        fileInput.dispatchEvent(changeEvent);
+                    }
+                });
+
+                // Handle next button click
+                nextButton.addEventListener('click', () => {
+                    if (answers[questionId]) {
+                        activateSection(parseInt(index) + 1);
+                    } else {
+                        updateStatusDisplay("Please upload a file first");
+                    }
+                });
+            });
+        }
+
+
+        // Simulate file upload progress (for demonstration purposes)
+        function simulateFileUpload(progressBar, progressFill, progressText, nextButton) {
+            progressBar.style.display = 'flex';
+            nextButton.disabled = true;
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    nextButton.disabled = false;
+                }
+
+                progressFill.style.width = `${progress}%`;
+                progressText.textContent = `${Math.round(progress)}%`;
+            }, 200);
+        }
+
+        // Setup OTP input listeners
+        function setupOTPInputListeners() {
+            // For each OTP section
+            document.querySelectorAll('.form-section[data-type="otp"]').forEach(section => {
+                const index = section.dataset.index;
+                const questionId = section.dataset.questionId;
+                const otpInputs = section.querySelectorAll('.otp-input');
+
+                // Check if OTP inputs exist
+                if (!otpInputs || otpInputs.length === 0) {
+                    console.warn(`OTP inputs not found for section ${index}`);
+                    return;
+                }
+
+                const resendButton = section.querySelector('.resend-otp-btn');
+                const countdownSpan = section.querySelector('.countdown');
+
+                // Add next button if it doesn't exist
+                let nextButton = section.querySelector('.next-button');
+                if (!nextButton) {
+                    nextButton = document.createElement('button');
+                    nextButton.className = 'next-button';
+                    nextButton.textContent = 'Verify';
+                    nextButton.style.display = 'none';
+
+                    // Get the navigation buttons container
+                    const navButtons = section.querySelector('.navigation-buttons');
+                    if (navButtons) {
+                        navButtons.appendChild(nextButton);
+                    }
+                }
+
+                // Initialize OTP countdown
+                if (resendButton && countdownSpan) {
+                    startOTPCountdown(countdownSpan, resendButton);
+                }
+
+                // Focus the first input when the section becomes active
+                if (currentSection == index) {
+                    setTimeout(() => {
+                        otpInputs[0].focus();
+                    }, 500);
+                }
+
+                // Handle input in OTP boxes
+                otpInputs.forEach(input => {
+                    // Only allow numeric input
+                    input.addEventListener('input', (e) => {
+                        const value = e.target.value;
+
+                        // Remove non-numeric characters
+                        e.target.value = value.replace(/[^0-9]/g, '');
+
+                        if (e.target.value !== '') {
+                            // Move to next input if available
+                            const currentIndex = parseInt(input.dataset.index);
+                            if (currentIndex < otpInputs.length - 1) {
+                                otpInputs[currentIndex + 1].focus();
+                            }
+
+                            // Check if all inputs are filled
+                            checkOTPCompletion(otpInputs, questionId, nextButton);
+                        }
+                    });
+
+                    // Handle backspace - go to previous input
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Backspace' && e.target.value === '') {
+                            const currentIndex = parseInt(input.dataset.index);
+                            if (currentIndex > 0) {
+                                otpInputs[currentIndex - 1].focus();
+                            }
+                        }
+                    });
+
+                    // Handle paste event for the entire OTP
+                    input.addEventListener('paste', (e) => {
+                        e.preventDefault();
+
+                        // Get pasted content
+                        const pasteData = (e.clipboardData || window.clipboardData).getData('text');
+
+                        // Only process if it looks like an OTP (just digits)
+                        if (/^\d+$/.test(pasteData)) {
+                            // Fill each input box with a digit
+                            for (let i = 0; i < otpInputs.length && i < pasteData.length; i++) {
+                                otpInputs[i].value = pasteData[i];
+                            }
+
+                            // Focus the next empty input or the last one
+                            const filledInputs = Math.min(pasteData.length, otpInputs.length);
+                            if (filledInputs < otpInputs.length) {
+                                otpInputs[filledInputs].focus();
+                            } else {
+                                otpInputs[otpInputs.length - 1].focus();
+                            }
+
+                            // Check if all inputs are filled
+                            checkOTPCompletion(otpInputs, questionId, nextButton);
+                        }
+                    });
+                });
+
+                // Handle resend button click
+                if (resendButton) {
+                    resendButton.addEventListener('click', () => {
+                        if (!resendButton.disabled) {
+                            // Clear existing OTP inputs
+                            otpInputs.forEach(input => {
+                                input.value = '';
+                            });
+
+                            // Focus the first input
+                            otpInputs[0].focus();
+
+                            // Restart countdown
+                            if (countdownSpan) {
+                                startOTPCountdown(countdownSpan, resendButton);
+                            }
+
+                            // Here you would trigger the actual OTP resend 
+                            // (In a real app, you'd call your backend API)
+                            simulateOTPResend();
+                        }
+                    });
+                }
+
+                // Handle next button click
+                nextButton.addEventListener('click', () => {
+                    const otpValue = getOTPValue(otpInputs);
+
+                    if (otpValue.length === otpInputs.length) {
+                        // In a real app, you would verify the OTP with your backend
+                        simulateOTPVerification(otpValue, nextButton, section, questionId);
+                    } else {
+                        updateStatusDisplay("Please enter the complete OTP");
+                    }
+                });
+            });
+        }
+
+
+        // Start OTP countdown timer
+        function startOTPCountdown(countdownSpan, resendButton) {
+            // Disable resend button during countdown
+            resendButton.disabled = true;
+
+            // Initial countdown value (in seconds)
+            let countdown = 30;
+            countdownSpan.textContent = countdown;
+
+            // Start countdown
+            const timer = setInterval(() => {
+                countdown--;
+                countdownSpan.textContent = countdown;
+
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    resendButton.disabled = false;
+                }
+            }, 1000);
+
+            // Store timer reference to clear if needed
+            window.otpTimer = timer;
+        }
+
+        // Check if all OTP inputs are filled
+        function checkOTPCompletion(otpInputs, questionId, nextButton) {
+            const otpValue = getOTPValue(otpInputs);
+            // Show the next button only if the OTP is fully entered
+            if (otpValue.length === otpInputs.length) {
+                answers[questionId] = otpValue;
+                nextButton.style.display = 'block';
+            } else {
+                answers[questionId] = '';
+                nextButton.style.display = 'none';
+            }
+        }
+
+        // Get OTP value from inputs
+        function getOTPValue(otpInputs) {
+            let otp = '';
+            otpInputs.forEach(input => {
+                otp += input.value;
+            });
+            return otp;
+        }
+
+        // Simulate OTP resend (for demonstration purposes)
+        function simulateOTPResend() {
+            updateStatusDisplay("Sending new OTP...");
+
+            setTimeout(() => {
+                updateStatusDisplay("New OTP sent to your phone");
+            }, 1500);
+        }
+
+        // Simulate OTP verification (for demonstration purposes)
+        function simulateOTPVerification(otp, nextButton, section, questionId) {
+            updateStatusDisplay("Verifying OTP...");
+            nextButton.disabled = true;
+
+            // In a real app, you'd make an API call to verify the OTP
+            setTimeout(() => {
+                // For demo: assume valid if OTP is all the same digit or "123456"
+                const isValid = /^(\d)\1+$/.test(otp) || otp === "123456";
+
+                if (isValid) {
+                    updateStatusDisplay("OTP verified successfully!");
+                    answers[questionId] = otp;
+
+                    // Clear any existing OTP timer
+                    if (window.otpTimer) {
+                        clearInterval(window.otpTimer);
+                    }
+
+                    // Proceed to next section after a brief delay
+                    setTimeout(() => {
+                        activateSection(parseInt(section.dataset.index) + 1);
+                    }, 1000);
+                } else {
+                    updateStatusDisplay("Invalid OTP. Please try again.");
+                    nextButton.disabled = false;
+                }
+            }, 1500);
+        }
+
+        // Activate a specific section
+        function activateSection(index) {
+            // Stop any playing audio
+            stopCurrentAudio();
+
+            // Prevent actions during animation
+            if (window.animating) return;
+            window.animating = true;
+
+            // Validate index
+            if (index < 0 || index >= questions.length) {
+                if (index >= questions.length) {
+                    window.animating = false;
+                    showCompletionScreen();
+                }
+                window.animating = false;
+                return;
+            }
+
+            // Stop any ongoing recording
+            if (isRecording && audioRecorder) {
+                stopListening();
+            }
+
+            // Reset processing state - IMPORTANT
+            isProcessingVoice = false;
+
+            // Get current and next sections
+            const currentSectionElement = document.querySelector(`.form-section[data-index="${currentSection}"]`);
+            const nextSectionElement = document.querySelector(`.form-section[data-index="${index}"]`);
+
+            if (!nextSectionElement) {
+                window.animating = false;
+                return;
+            }
+
+            // Determine direction for animation
+            const direction = index > currentSection ? 'right' : 'left';
+
+            // Set initial position of the next section
+            nextSectionElement.classList.remove('active', 'left', 'right');
+            nextSectionElement.classList.add(direction);
+
+            // Force a reflow to ensure the initial position is applied
+            void nextSectionElement.offsetWidth;
+
+            // Slide out current section
+            if (currentSectionElement) {
+                currentSectionElement.classList.remove('active');
+                currentSectionElement.classList.add(index > currentSection ? 'left' : 'right');
+            }
+
+            // Slide in next section
+            nextSectionElement.classList.add('active');
+            nextSectionElement.classList.remove('left', 'right');
+
+            // Update current section index
+            currentSection = index;
+
+            // Reset the status display for the new section
+            const statusDisplay = nextSectionElement.querySelector('.status-display');
+            if (statusDisplay) {
+                statusDisplay.textContent = "Please speak or type your answer";
+                statusDisplay.classList.remove('listening');
+            }
+
+            // Complete animation after transition
+            setTimeout(() => {
+                window.animating = false;
+
+                // Reset any processing states again to be safe
+                isProcessingVoice = false;
+
+                // Speak the new question after animation completes
+                if (index < questions.length) {
+                    speakText(questions[index]);
+                }
+            }, 500); // Match this to your CSS transition duration
+        }        
+            
+            
+        // Show completion screen with summary
+        function showCompletionScreen() {
+            // Before showing the completion screen, check that all required questions have answers
+            const unansweredRequired = questions.filter(q =>
+                q.required !== false && // Question is required
+                (!answers[q.id] || answers[q.id] === '') // No answer provided
+            );
+
+            if (unansweredRequired.length > 0) {
+                // Go to the first unanswered required question
+                const firstUnansweredIndex = questions.findIndex(q => q.id === unansweredRequired[0].id);
+                activateSection(firstUnansweredIndex);
+                updateStatusDisplay("Please answer this required question before submitting");
+                return;
+            }
+
+            if (!questions || questions.length === 0) {
+                console.error("Cannot show completion screen: questions not loaded");
+                return;
+            }
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            document.getElementById('completion-screen').classList.add('active');
+
+            // Generate summary
+            const summaryContainer = document.getElementById('summary-container');
+            summaryContainer.innerHTML = '<h2>Your Responses by Category:</h2>';
+
+            // Group questions by category
+            const categorizedResponses = {};
+            questions.forEach((question) => {
+                if (!categorizedResponses[question.category]) {
+                    categorizedResponses[question.category] = [];
+                }
+
+                categorizedResponses[question.category].push({
+                    question: question.text,
+                    answer: answers[question.id] || 'Not answered',
+                    id: question.id
+                });
+            });
+
+            // Display responses by category
+            Object.keys(categorizedResponses).forEach(category => {
+                const categoryGroup = document.createElement('div');
+                categoryGroup.className = 'category-group';
+
+                const categoryHeader = document.createElement('h3');
+                categoryHeader.textContent = category;
+                categoryGroup.appendChild(categoryHeader);
+
+                const categoryList = document.createElement('ul');
+
+                categorizedResponses[category].forEach(item => {
+                    const listItem = document.createElement('li');
+                    const questionText = item.question.split('(')[0]; // Get Hindi part of the question
+                    listItem.innerHTML = `<strong>${questionText}</strong><br>${item.answer}`;
+                    categoryList.appendChild(listItem);
+                });
+
+                categoryGroup.appendChild(categoryList);
+                summaryContainer.appendChild(categoryGroup);
+            });
+
+            // Add a hidden field with JSON data
+            const jsonData = document.createElement('textarea');
+            jsonData.id = 'form-data-json';
+            jsonData.style.display = 'none';
+            jsonData.value = JSON.stringify(answers, null, 2);
+            summaryContainer.appendChild(jsonData);
+
+            // Add a button to copy JSON data
+            const copyButton = document.createElement('button');
+            copyButton.textContent = 'Copy JSON Data';
+            copyButton.className = 'copy-json-button';
+            copyButton.addEventListener('click', () => {
+                const jsonText = document.getElementById('form-data-json');
+                jsonText.style.display = 'block';
+                jsonText.select();
+                document.execCommand('copy');
+                jsonText.style.display = 'none';
+                copyButton.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyButton.textContent = 'Copy JSON Data';
+                }, 2000);
+            });
+            summaryContainer.appendChild(copyButton);
+            displayMetrics();
+            // Speak completion message with OpenAI API
+            speakText({
+                text: "धन्यवाद! आपका फॉर्म पूरा हो गया है। Thank you for completing the form."
+            });
+        }
+            
+        // Add function to log or display metrics
+        function displayMetrics() {
+            console.log("Performance Metrics:", JSON.stringify(metrics, null, 2));
+
+            // You could also add this to the completion screen
+            const metricsDiv = document.createElement('div');
+            metricsDiv.className = 'metrics-summary';
+            metricsDiv.innerHTML = `
+            <h3>Performance Metrics</h3>
+            <p>Average TTS generation time: ${calculateAverage(metrics.questionTTSTime)}ms</p>
+            <p>Average audio playback time: ${calculateAverage(metrics.questionPlayTime)}ms</p>
+            <p>Average recording time: ${calculateAverage(metrics.recordingTime)}ms</p>
+            <p>Average transcription time: ${calculateAverage(metrics.transcriptionTime)}ms</p>
+            <p>Average verification time: ${calculateAverage(metrics.verificationTime)}ms</p>
+        `;
+
+            // Add to completion screen
+            document.getElementById('summary-container').appendChild(metricsDiv);
+        }
+
+        // Function to determine the next section based on conditional logic
+        function getNextSectionIndex(currentIndex) {
+            const currentQuestion = questions[currentIndex];
+            const currentAnswer = answers[currentQuestion.id];
+
+            // Check if this question has conditional navigation rules
+            if (currentQuestion.conditionalNavigation && currentAnswer) {
+                const navRule = currentQuestion.conditionalNavigation[currentAnswer];
+
+                if (navRule) {
+                    // If there's a rule for the current answer
+                    if (navRule.goToCategory) {
+                        // Find the first question of the target category
+                        for (let i = 0; i < questions.length; i++) {
+                            if (questions[i].category === navRule.goToCategory) {
+                                return i;
+                            }
+                        }
+                    } else if (navRule.goToQuestion) {
+                        // Find the specific question by ID
+                        for (let i = 0; i < questions.length; i++) {
+                            if (questions[i].id === navRule.goToQuestion) {
+                                return i;
+                            }
+                        }
+                    } else if (navRule.skipToEnd) {
+                        // Skip to completion screen
+                        return questions.length;
+                    }
+                }
+            }
+
+            // Default: go to next question
+            return currentIndex + 1;
+        }
+
+        // Activate a specific section
+        function activateSection(index) {
+            // Clear ALL timers and intervals
+            for (let i = setTimeout(function () { }, 0); i > 0; i--) {
+                clearTimeout(i);
+            }
+
+            // Clear any audio processing or recording state
+            if (isRecording && audioRecorder) {
+                try {
+                    audioRecorder.stop();
+                } catch (e) {
+                    console.log("Error stopping recorder", e);
+                }
+            }
+
+            isRecording = false;
+            isProcessingVoice = false;
+
+            // Stop any playing audio
+            stopCurrentAudio();
+
+            // Clear any wave animation
+            document.querySelectorAll('.listening-indicator').forEach(indicator => {
+                indicator.classList.remove('listening');
+            });
+
+            // Prevent actions during animation
+            if (window.animating) return;
+            window.animating = true;
+
+            // Validate index
+            if (index < 0 || index >= questions.length) {
+                if (index >= questions.length) {
+                    window.animating = false;
+                    showCompletionScreen();
+                }
+                window.animating = false;
+                return;
+            }
+
+            // Get current and next sections
+            const currentSectionElement = document.querySelector(`.form-section[data-index="${currentSection}"]`);
+            const nextSectionElement = document.querySelector(`.form-section[data-index="${index}"]`);
+
+            if (!nextSectionElement) {
+                window.animating = false;
+                return;
+            }
+
+            // Determine direction for animation
+            const direction = index > currentSection ? 'right' : 'left';
+
+            // Set initial position of the next section
+            nextSectionElement.classList.remove('active', 'left', 'right');
+            nextSectionElement.classList.add(direction);
+
+            // Force a reflow to ensure the initial position is applied
+            void nextSectionElement.offsetWidth;
+
+            // Slide out current section
+            if (currentSectionElement) {
+                currentSectionElement.classList.remove('active');
+                currentSectionElement.classList.add(index > currentSection ? 'left' : 'right');
+            }
+
+            // Slide in next section
+            nextSectionElement.classList.add('active');
+            nextSectionElement.classList.remove('left', 'right');
+
+            // Update current section index
+            currentSection = index;
+
+            // Reset the status display for the new section
+            const statusDisplay = nextSectionElement.querySelector('.status-display');
+            if (statusDisplay) {
+                statusDisplay.textContent = "Please speak or type your answer";
+                statusDisplay.classList.remove('listening');
+            }
+
+            // Complete animation after transition
+            setTimeout(() => {
+                window.animating = false;
+
+                // Reset any processing states again to be safe
+                isProcessingVoice = false;
+
+                // Create a completely new context for the current question
+                if (window.analyzerNode) {
+                    try {
+                        window.analyzerNode.disconnect();
+                        window.analyzerNode = null;
+                    } catch (e) {
+                        console.log("Error disconnecting analyzer", e);
+                    }
+                }
+
+                // Speak the new question after animation completes with a completely new context
+                if (index < questions.length) {
+                    // Use a timeout to ensure complete separation from previous question
+                    setTimeout(() => {
+                        speakText(questions[index]);
+                    }, 100);
+                }
+            }, 500); // Match this to your CSS transition duration
+        }
+
+
+
+        // Add styles for skipped questions in the progress bar
+        const conditionalStyles = document.createElement('style');
+        conditionalStyles.textContent = `
+        .step.skipped {
+            background-color: #ffe0b2; /* Light orange for skipped */
+            opacity: 0.6;
+        }
+        
+        /* Add a tooltip to show which sections were skipped */
+        .step.skipped:hover::after {
+            content: 'Skipped';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            white-space: nowrap;
+        }
+        `;
+        document.head.appendChild(conditionalStyles);
+
+        
+        const styleElement = document.createElement('style');
+        styleElement.textContent = `
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .option-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);   
+        }
+
+        .option-item input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .option-item label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        /* Custom radio buttons */
+        .option-item input[type="radio"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        outline: none;
+        margin-right: 10px;
+        }
+
+        .option-item input[type="radio"]:checked {
+        border-color: var(--highlight-color);
+        background: radial-gradient(circle, var(--highlight-color) 40%, transparent 40%);
+        }
+
+
+        .copy-json-button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .copy-json-button:hover {
+            background-color: #5a6268;
+        }
+
+        #form-data-json {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            font-family: monospace;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        `;
+        document.head.appendChild(styleElement);
+        const additionalStyle = document.createElement('style');
+        additionalStyle.textContent = `
+        .form-section.active {
+            display: flex !important;
+            opacity: 1 !important;
+            z-index: 2;
+        }
+        
+        .form-section {
+            display: none !important;
+            opacity: 0;
+            z-index: 1;
+        }
+        
+        .main-content {
+            position: relative;
+        }
+    `;
+    document.head.appendChild(additionalStyle);
+    const removeProgressBarStyle = document.createElement('style');
+    removeProgressBarStyle.textContent = `
+    /* Hide the progress bar completely */
+    .progress-bar {
+        display: none;
+    }
+    
+    /* Adjust the main content to account for the removed progress bar */
+    .main-content {
+        padding-top: 20px; /* Reduced from 60px since we don't have progress bar */
+    }
+`;
+    document.head.appendChild(removeProgressBarStyle);
+    </script>
+</body>
+
+</html>
