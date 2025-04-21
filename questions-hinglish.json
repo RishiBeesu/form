@@ -1,5 +1,35 @@
 [
-    {
+        {
+            "category": "KYC Details",
+            "questions": [
+                {
+                    "id": "aadhaar_number",
+                    "text": "Apna Aadhaar number darj karen",
+                    "type": "text",
+                    "validation": {
+                        "pattern": "^[0-9]{12}$"
+                    },
+                    "required": true
+                },
+                {
+                    "id": "aadhaar_otp",
+                    "text": "Aapke Aadhaar se jude mobile number par bheje gaye OTP ko darj karen",
+                    "type": "otp",
+                    "length": 6,
+                    "required": true
+                },
+                {
+                    "id": "pan_number",
+                    "text": "Apna PAN number darj karen",
+                    "type": "text",
+                    "validation": {
+                        "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]{1}$"
+                    },
+                    "required": true
+                }
+            ]
+        },
+        {
         "category": "Loan Avashyaktayen",
         "questions": [
             {
@@ -429,36 +459,6 @@
                 "type": "file",
                 "allowedTypes": ".pdf,.jpg,.jpeg,.png",
                 "maxSizeInMB": 5,
-                "required": true
-            }
-        ]
-    },
-    {
-        "category": "KYC Details",
-        "questions": [
-            {
-                "id": "aadhaar_number",
-                "text": "Apna Aadhaar number darj karen",
-                "type": "text",
-                "validation": {
-                    "pattern": "^[0-9]{12}$"
-                },
-                "required": true
-            },
-            {
-                "id": "aadhaar_otp",
-                "text": "Aapke Aadhaar se jude mobile number par bheje gaye OTP ko darj karen",
-                "type": "otp",
-                "length": 6,
-                "required": true
-            },
-            {
-                "id": "pan_number",
-                "text": "Apna PAN number darj karen",
-                "type": "text",
-                "validation": {
-                    "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]{1}$"
-                },
                 "required": true
             }
         ]

@@ -1,5 +1,35 @@
 [
-    {
+        {
+            "category": "KYC Details",
+            "questions": [
+                {
+                    "id": "aadhaar_number",
+                    "text": "Nimma Aadhaar number namudisuvi",
+                    "type": "text",
+                    "validation": {
+                        "pattern": "^[0-9]{12}$"
+                    },
+                    "required": true
+                },
+                {
+                    "id": "aadhaar_otp",
+                    "text": "Nimma Aadhaar ge jodsalpaada mobile number ge kalisidde OTP annu namudisuvi",
+                    "type": "otp",
+                    "length": 6,
+                    "required": true
+                },
+                {
+                    "id": "pan_number",
+                    "text": "Nimma PAN number namudisuvi",
+                    "type": "text",
+                    "validation": {
+                        "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]{1}$"
+                    },
+                    "required": true
+                }
+            ]
+        },
+{
         "category": "Loan Avashyaktegalu",
         "questions": [
             {
@@ -429,36 +459,6 @@
                 "type": "file",
                 "allowedTypes": ".pdf,.jpg,.jpeg,.png",
                 "maxSizeInMB": 5,
-                "required": true
-            }
-        ]
-    },
-    {
-        "category": "KYC Details",
-        "questions": [
-            {
-                "id": "aadhaar_number",
-                "text": "Nimma Aadhaar number namudisuvi",
-                "type": "text",
-                "validation": {
-                    "pattern": "^[0-9]{12}$"
-                },
-                "required": true
-            },
-            {
-                "id": "aadhaar_otp",
-                "text": "Nimma Aadhaar ge jodsalpaada mobile number ge kalisidde OTP annu namudisuvi",
-                "type": "otp",
-                "length": 6,
-                "required": true
-            },
-            {
-                "id": "pan_number",
-                "text": "Nimma PAN number namudisuvi",
-                "type": "text",
-                "validation": {
-                    "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]{1}$"
-                },
                 "required": true
             }
         ]
